@@ -104,8 +104,9 @@ public class QuizDao implements IQuizDao {
   public QuizStatus getCurrentQuizStatus(String quizId) {
     StringBuilder sb = new StringBuilder();
     sb.append("SELECT q.quiz_id, q.number_of_questions, qs.questions_asked FROM Quiz q  ");
-    sb.append(" JOIN QuizStatus qs on q.quiz_id = qs.quiz_id");
-    QuizStatus status = this.jdbcTemplate.query(sb.toString(), new ResultSetExtractor<QuizStatus>() {
+    sb.append(" JOIN QuizStatus qs on q.quiz_id = qs.quiz_id WHERE q.quiz_id=?");
+    QuizStatus status = this.jdbcTemplate.query(sb.toString(), new Object[] {quizId},
+        new ResultSetExtractor<QuizStatus>() {
 
       @Override
       public QuizStatus extractData(ResultSet rs) throws SQLException, DataAccessException {

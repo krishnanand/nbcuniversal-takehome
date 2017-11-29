@@ -33,7 +33,7 @@ public class QuizDaoTest {
   
   @Test
   public void getCurrentQuizStatus() throws Exception {
-    QuizStatus actual = this.quizDao.getCurrentQuizStatus("ABCD1234");
+    QuizStatus actual = this.quizDao.getCurrentQuizStatus("ABCDE12345");
     Assert.assertNotNull(actual);
     QuizStatus expected = new QuizStatus();
     expected.setNumberOfAskedQuestions(0);

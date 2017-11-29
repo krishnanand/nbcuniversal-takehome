@@ -1431,3 +1431,6 @@ CREATE TABLE IF NOT EXISTS QuizQuestions(id bigint auto_increment, quiz_id varch
 2017-11-29 10:26:56 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
 CREATE TABLE IF NOT EXISTS QuizQuestions(id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(id)) [42001-196]
+2017-11-29 12:21:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT Q.QUIZ_ID, Q.NUMBER_OF_QUESTIONS, QS.QUESTIONS_ASKED FROM QUIZ Q   JOIN QUIZSTATUS QS ON Q.QUIZ_ID = QS.QUIZ_ID WHERE Q.QUIZ_ID= [*]"; expected "ALL, ANY, SOME"; SQL statement:
+SELECT q.quiz_id, q.number_of_questions, qs.questions_asked FROM Quiz q   JOIN QuizStatus qs on q.quiz_id = qs.quiz_id WHERE q.quiz_id= [42001-196]
