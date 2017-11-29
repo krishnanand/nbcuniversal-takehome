@@ -21,5 +21,10 @@ public interface IQuizDao {
    * @return value object representing the quiz status
    */
   QuizStatus getCurrentQuizStatus(String quizId);
+  
+  /**
+   * Returns an instance of quiz question by random.
+   */
+  QuizQuestion getQuizQuestion();
 
 }

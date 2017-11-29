@@ -1395,3 +1395,39 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:/Users/krish
 	at org.h2.mvstore.FileStore.open(FileStore.java:173)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:347)
 	... 50 more
+2017-11-29 02:26:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(QUIZ_QUESTION_ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(quiz_question_id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Quesions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 02:26:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(QUIZ_QUESTION_ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(quiz_question_id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Quesions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 02:26:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(QUIZ_QUESTION_ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(quiz_question_id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Quesions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 02:26:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "QUIZQUESTIONS" not found; SQL statement:
+DELETE FROM QuizQuestions [42102-196]
+2017-11-29 02:26:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(QUIZ_QUESTION_ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(quiz_question_id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Quesions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 02:26:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "QUIZQUESTIONS" not found; SQL statement:
+DELETE FROM QuizQuestions [42102-196]
+2017-11-29 02:28:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(QUIZ_QUESTION_ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(quiz_question_id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 02:28:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(QUIZ_QUESTION_ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(quiz_question_id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 10:15:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 10:15:48 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(QUIZ_QUESTION_ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(quiz_question_id)) [42001-196]
+2017-11-29 10:26:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(id)) [42001-196]
+2017-11-29 10:26:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS QUIZQUESTIONS(ID BIGINT AUTO_INCREMENT, QUIZ_ID VARCHAR(10), QUESTION_ID BIGINT, FOREIGN KEY(QUIZ_ID) REFERENCES QUIZ(QUIZ_ID), FOREIGN KEY(QUESTION_ID) REFERENCES QUESTIONS(QUESTION_ID) PRIMARY[*] KEY(ID)) "; expected "INDEX, ON, NOT, DEFERRABLE, NOCHECK, CHECK, ,, )"; SQL statement:
+CREATE TABLE IF NOT EXISTS QuizQuestions(id bigint auto_increment, quiz_id varchar(10), question_id bigint, FOREIGN KEY(quiz_id) REFERENCES Quiz(quiz_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id) PRIMARY KEY(id)) [42001-196]
