@@ -1,0 +1,22 @@
+[
+  {"question_id": "1",
+   "description": "Is 2016 a leap year?",
+   "answer": "true"
+  },
+  {"question_id": "2",
+   "description": "Is Sunday a weekday?",
+   "answer": "false"
+  },
+  {"question_id": "3",
+   "description": "Is August the 8th month?",
+   "answer": "true"
+  },
+  {"question_id": "4",
+   "description": "Is July 25 independence day of United States of America?",
+   "answer": "false"
+  },
+  {"question_id": "5",
+   "description": "Does January have 31 days in a month?",
+   "answer": "true"
+  }
+]

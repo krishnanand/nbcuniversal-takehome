@@ -1,0 +1,1 @@
+DELETE FROM Score;DELETE FROM QuizStatus;DELETE FROM Quiz;DELETE from Questions;
