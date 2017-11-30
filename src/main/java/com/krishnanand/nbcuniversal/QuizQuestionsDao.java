@@ -70,13 +70,14 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
    * for a given quiz id.
    * 
    * @param quizId quiz id
+   * @return number of rows updated
    */
   @Override
   public int updateQuizStatus(String quizId) {
     StringBuilder sb = new StringBuilder();
     sb.append("UPDATE QuizStatus SET questions_asked = questions_asked + 1 ");
     sb.append("WHERE quiz_id = ?");
-    this.jdbcTemplate.update(sb.toString(), new PreparedStatementSetter() {
+    return this.jdbcTemplate.update(sb.toString(), new PreparedStatementSetter() {
 
       @Override
       public void setValues(PreparedStatement ps) throws SQLException {
@@ -84,11 +85,12 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
       }
       
     });
-    return 0;
   }
 
   /**
    * Inserts the asked quiz questions to {@code QuizQuestions} table.
+   * 
+   * <p>The implementation assumes that quiz id exists.
    * 
    * @param quizId quiz id for which the questions are to be asked
    * @param questionId question id for which the questions are to be asked
