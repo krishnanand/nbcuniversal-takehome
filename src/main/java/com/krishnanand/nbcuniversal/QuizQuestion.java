@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * An instance of this class encapsulates a single question for a quiz.
+ * 
  * @author krishnanand (Kartik Krishnanand)
  */
 @JsonInclude(Include.NON_NULL)

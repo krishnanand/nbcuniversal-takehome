@@ -22,12 +22,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class QuizQuestionsDao implements IQuizQuestionsDao {
   
-  @Autowired
   private final DataSource dataSource;
   
   private final JdbcTemplate jdbcTemplate;
   
-
+  @Autowired
   public QuizQuestionsDao(DataSource dataSource) {
     this.dataSource = dataSource;
     this.jdbcTemplate = new JdbcTemplate(this.dataSource);
@@ -45,8 +44,9 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
   @Override
   public QuizQuestion fetchUniqueQuizQuestion(String quizId) {
     StringBuilder sb = new StringBuilder();
-    sb.append("SELECT q.question_id, q.question_text, q.answer FROM Questions a JOIN QuizQuestions qq ON ");
-    sb.append("qq.quiz_id = q.quiz_id WHERE q.question_id NOT IN ");
+    sb.append("SELECT q.question_id, q.question_text, q.answer FROM Questions q ");
+    sb.append("LEFT JOIN QuizQuestions qq ON ");
+    sb.append("q.question_id = qq.question_id WHERE q.question_id NOT IN ");
     sb.append("(SELECT qq.question_id FROM Questions WHERE qq.quiz_id = ?)");
     List<QuizQuestion> questions = 
         this.jdbcTemplate.query(sb.toString(), new Object[] {quizId}, new RowMapper<QuizQuestion>() {
@@ -62,7 +62,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
           }
         });
     Collections.shuffle(questions);
-    return questions.get(0);
+    return questions.isEmpty() ? null : questions.get(0);
   }
 
   /**
@@ -87,9 +87,17 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
     return 0;
   }
 
+  /**
+   * Inserts the asked quiz questions to {@code QuizQuestions} table.
+   * 
+   * @param quizId quiz id for which the questions are to be asked
+   * @param questionId question id for which the questions are to be asked
+   */
   @Override
-  public int addQuestionsToQuiz(String quizId, int questionId) {
+  public int markQuestionsAsAsked(String quizId, int questionId) {
     // TODO Auto-generated method stub
-    return 0;
+    StringBuilder sb = new StringBuilder();
+    sb.append("INSERT INTO QuizQuestions(quiz_id, question_id) VALUES(?, ?)");
+    return this.jdbcTemplate.update(sb.toString(), new Object[] {quizId, questionId});
   }
 }

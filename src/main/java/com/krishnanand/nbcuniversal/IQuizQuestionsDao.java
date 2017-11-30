@@ -32,6 +32,6 @@ public interface IQuizQuestionsDao {
    * @param quizId quiz id
    * @param questionId question id to be inserted
    */
-  int addQuestionsToQuiz(String quizId, int questionId);
+  int markQuestionsAsAsked(String quizId, int questionId);
 
 }
