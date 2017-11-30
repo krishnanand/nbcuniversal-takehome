@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
+ * An instance of this class encapsulates a single question for a quiz.
  * @author krishnanand (Kartik Krishnanand)
  */
 @JsonInclude(Include.NON_NULL)
@@ -18,10 +19,6 @@ public class QuizQuestion {
   private String description;
   
   private boolean answer;
-  
-  private Integer currentQuestion;
-  
-  private Integer numberOfQuestionsRemaining;
 
   public String getQuizId() {
     return quizId;
@@ -47,22 +44,6 @@ public class QuizQuestion {
     this.description = description;
   }
 
-  public Integer getCurrentQuestion() {
-    return currentQuestion;
-  }
-
-  public void setCurrentQuestion(Integer currentQuestion) {
-    this.currentQuestion = currentQuestion;
-  }
-
-  public Integer getNumberOfQuestionsRemaining() {
-    return numberOfQuestionsRemaining;
-  }
-
-  public void setNumberOfQuestionsRemaining(Integer numberOfQuestionsRemaining) {
-    this.numberOfQuestionsRemaining = numberOfQuestionsRemaining;
-  }
-
   public boolean isAnswer() {
     return answer;
   }
@@ -82,10 +63,6 @@ public class QuizQuestion {
     builder.append(description);
     builder.append(", answer=");
     builder.append(answer);
-    builder.append(", currentQuestion=");
-    builder.append(currentQuestion);
-    builder.append(", numberOfQuestionsRemaining=");
-    builder.append(numberOfQuestionsRemaining);
     builder.append("]");
     return builder.toString();
   }
@@ -93,8 +70,7 @@ public class QuizQuestion {
   @Override
   public int hashCode() {
     return Objects.hash(
-        this.answer, this.currentQuestion, this.description,
-        this.numberOfQuestionsRemaining, this.questionId, this.quizId);
+        this.answer, this.description, this.questionId, this.quizId);
   }
 
   @Override
@@ -112,25 +88,11 @@ public class QuizQuestion {
     if (answer != other.answer) {
       return false;
     }
-    if (currentQuestion == null) {
-      if (other.currentQuestion != null) {
-        return false;
-      }
-    } else if (!currentQuestion.equals(other.currentQuestion)) {
-      return false;
-    }
     if (description == null) {
       if (other.description != null) {
         return false;
       }
     } else if (!description.equals(other.description)) {
-      return false;
-    }
-    if (numberOfQuestionsRemaining == null) {
-      if (other.numberOfQuestionsRemaining != null) {
-        return false;
-      }
-    } else if (!numberOfQuestionsRemaining.equals(other.numberOfQuestionsRemaining)) {
       return false;
     }
     if (questionId == null) {

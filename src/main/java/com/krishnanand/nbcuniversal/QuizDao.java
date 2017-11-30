@@ -124,9 +124,5 @@ public class QuizDao implements IQuizDao {
     });
     return status;
   }
-  
-  public QuizQuestion getQuizQuestion() {
-    return null;
-  }
 
 }

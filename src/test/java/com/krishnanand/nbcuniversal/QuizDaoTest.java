@@ -41,7 +41,6 @@ public class QuizDaoTest {
     expected.setQuizId("ABCDE12345");
     expected.setQuizEnded(false);
     Assert.assertEquals(expected, actual);
-    
   }
 
 }
