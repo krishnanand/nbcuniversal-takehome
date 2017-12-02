@@ -3,7 +3,9 @@ package com.krishnanand.nbcuniversal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -164,6 +166,19 @@ public class QuizServiceTest {
                   return rs.getInt("question_id");
               }
             }));
+  }
+  
+  @Test
+  public void testQuestionsExhausted_EndToEnd() throws Exception {
+    InitRegistration actual = this.quizService.generateQuizId("test1");
+    Set<QuizQuestion> quizQuestions = new LinkedHashSet<>();
+    for (int i = 0; i < actual.getNumberOfQuestions(); i++) {
+      quizQuestions.add(this.quizService.fetchQuestion(actual.getQuizId()));
+    }
+    Assert.assertEquals(actual.getNumberOfQuestions(), quizQuestions.size());
+    // Now send an additional request.
+    QuizQuestion shouldBeNull = this.quizService.fetchQuestion(actual.getQuizId());
+    Assert.assertNull(shouldBeNull);
   }
 
 }
