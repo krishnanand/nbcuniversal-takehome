@@ -2,6 +2,8 @@ package com.krishnanand.nbcuniversal;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -15,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -110,6 +113,56 @@ public class QuizServiceTest {
                 return null;
               }
               
+            }));
+    Assert.assertEquals(5,
+        (int) this.jdbcTemplate.query(
+            "SELECT question_id from QuizQuestions where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                while (rs.next()) {
+                  return rs.getInt("question_id");
+                }
+                return null;
+              }
+              
+            }));
+    QuizQuestion actual = this.quizService.fetchQuestion("ABCDE12345");
+    Assert.assertNotNull(actual);
+    QuizQuestion expected = new QuizQuestion();
+    expected.setQuizId("ABCD12345");
+    Assert.assertNotEquals(expected.getQuestionId(), 5); // Because it has been asked before.
+    
+    // Verify that the status has been updated.
+    Assert.assertEquals(2,
+        (int) this.jdbcTemplate.query(
+            "SELECT questions_asked from QuizStatus where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                while (rs.next()) {
+                  return rs.getInt("questions_asked");
+                }
+                return null;
+              }
+              
+            }));
+    List<Integer> askedQuestions = new ArrayList<>();
+    askedQuestions.add(5);
+    askedQuestions.add(actual.getQuestionId());
+    Assert.assertEquals(askedQuestions,
+        this.jdbcTemplate.query(
+            "SELECT question_id from QuizQuestions where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, new RowMapper<Integer>() {
+
+              @Override
+              public Integer mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+                  return rs.getInt("question_id");
+              }
             }));
   }
 
