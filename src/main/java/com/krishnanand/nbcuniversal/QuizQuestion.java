@@ -15,7 +15,7 @@ public class QuizQuestion {
   
   private String quizId;
   
-  private String questionId;
+  private int questionId;
   
   private String description;
   
@@ -29,11 +29,11 @@ public class QuizQuestion {
     this.quizId = quizId;
   }
 
-  public String getQuestionId() {
+  public int getQuestionId() {
     return questionId;
   }
 
-  public void setQuestionId(String questionId) {
+  public void setQuestionId(int questionId) {
     this.questionId = questionId;
   }
 
@@ -96,11 +96,7 @@ public class QuizQuestion {
     } else if (!description.equals(other.description)) {
       return false;
     }
-    if (questionId == null) {
-      if (other.questionId != null) {
-        return false;
-      }
-    } else if (!questionId.equals(other.questionId)) {
+    if (this.questionId != other.getQuestionId()) {
       return false;
     }
     if (quizId == null) {

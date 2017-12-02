@@ -11,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Repository;
 
 /**
  * An instance of this class represents the data access layer connecting the
@@ -18,6 +19,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
  * 
  * @author krishnanand (Kartik Krishnanand)
  */
+@Repository
 public class QuizDao implements IQuizDao {
   
   private final JdbcTemplate jdbcTemplate;
@@ -123,6 +125,19 @@ public class QuizDao implements IQuizDao {
       
     });
     return status;
+  }
+
+  /**
+   * Creates an entry for {@code quizId} in {@code QuizStatus}.
+   * 
+   * @param quizId quiz id
+   * @return number of rows updated
+   */
+  @Override
+  public int initialiseQuizStatus(String quizId) {
+    return this.jdbcTemplate.update(
+        "INSERT INTO QuizStatus(quiz_id) VALUES(?)",
+        new Object[] {quizId});
   }
 
 }

@@ -54,7 +54,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
           @Override
           public QuizQuestion mapRow(ResultSet rs, int rowNum) throws SQLException {
             QuizQuestion qq = new QuizQuestion();
-            qq.setQuestionId(rs.getString("question_id"));
+            qq.setQuestionId(rs.getInt("question_id"));
             qq.setQuizId(quizId);
             qq.setAnswer(rs.getBoolean("answer"));
             qq.setDescription(rs.getString("question_text"));
@@ -83,7 +83,6 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
       public void setValues(PreparedStatement ps) throws SQLException {
         ps.setString(1,  quizId);
       }
-      
     });
   }
 
@@ -98,8 +97,8 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
   @Override
   public int markQuestionsAsAsked(String quizId, int questionId) {
     // TODO Auto-generated method stub
-    StringBuilder sb = new StringBuilder();
-    sb.append("INSERT INTO QuizQuestions(quiz_id, question_id) VALUES(?, ?)");
-    return this.jdbcTemplate.update(sb.toString(), new Object[] {quizId, questionId});
+    return this.jdbcTemplate.update(
+        "INSERT INTO QuizQuestions(quiz_id, question_id) VALUES(?, ?)",
+        new Object[] {quizId, questionId});
   }
 }

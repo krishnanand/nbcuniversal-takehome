@@ -21,5 +21,15 @@ public interface IQuizDao {
    * @return value object representing the quiz status
    */
   QuizStatus getCurrentQuizStatus(String quizId);
+  
+  /**
+   * Initialises the quiz status.
+   * 
+   * <p>This operation should be executed as soon as the quiz is registered.
+   * 
+   * @param quizId quiz status
+   * @return number of rows updated
+   */
+  int initialiseQuizStatus(String quizId);
 
 }

@@ -13,16 +13,38 @@ public class QuizService implements IQuizService {
   
   private final IQuizDao quizDao;
   
+  private final IQuizQuestionsDao questionsDao;
+  
   @Autowired
-  public QuizService(IQuizDao quizDao) {
+  public QuizService(IQuizDao quizDao, IQuizQuestionsDao questionsDao) {
     this.quizDao = quizDao;
+    this.questionsDao = questionsDao;
   }
   
-  
+  /**
+   * Fetches a unique question by quiz id.
+   * 
+   * <p>The implementation logic is given below
+   * <ul>
+   *   <li>Checks how many questions have been asked.</li>
+   *   <li>If the quiz has ended, then it returns {@code null}.
+   *   <li>If the quiz has not ended, then a unique question has fetched.</li>
+   *   <li>the number of questions counter is updated.</li>
+   *   <li>The question is marked as asked.<li>
+   * </ul>
+   */
   @Override
+  @Transactional
   public QuizQuestion fetchQuestion(String quizId) {
-    // TODO Auto-generated method stub
-    return null;
+    QuizStatus current = this.quizDao.getCurrentQuizStatus(quizId);
+    if (current.isQuizEnded()) {
+      return null;
+    }
+    //
+    QuizQuestion question = this.questionsDao.fetchUniqueQuizQuestion(quizId);
+    this.questionsDao.updateQuizStatus(quizId);
+    this.questionsDao.markQuestionsAsAsked(quizId, question.getQuestionId());
+    return question;
   }
 
   /**
@@ -31,7 +53,9 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public InitRegistration generateQuizId(String username) {
-    return this.quizDao.registerQuiz(username);
+    InitRegistration initRegistration = this.quizDao.registerQuiz(username);
+    this.quizDao.initialiseQuizStatus(initRegistration.getQuizId());
+    return initRegistration;
   }
 
 }

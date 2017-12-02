@@ -25,7 +25,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author krishnanand (Kartik Krishnanand)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes= {QuizService.class, QuizDao.class, DatabaseCredentials.class})
+@SpringBootTest(classes= {
+    QuizService.class, QuizDao.class, QuizQuestionsDao.class, DatabaseCredentials.class})
 @Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD, scripts="classpath:/schema.sql")
 @Sql(executionPhase=ExecutionPhase.AFTER_TEST_METHOD, scripts="classpath:/cleanup.sql")
 public class QuizServiceTest {
@@ -67,7 +68,23 @@ public class QuizServiceTest {
           
         });
     Assert.assertEquals(expected, actual);
+    // Check if the quiz service has been initialised.
     
+    Assert.assertEquals(0,
+        (int) this.jdbcTemplate.query(
+            "SELECT questions_asked from QuizStatus where quiz_id = ? ",
+            new Object[] {actual.getQuizId()}, new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                while (rs.next()) {
+                  return rs.getInt("questions_asked");
+                }
+                return null;
+              }
+              
+            }));
   }
 
 }
