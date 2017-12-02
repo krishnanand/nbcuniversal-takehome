@@ -28,7 +28,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes= {
     QuizService.class, QuizDao.class, QuizQuestionsDao.class, DatabaseCredentials.class})
-@Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD, scripts="classpath:/schema.sql")
+@Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD,
+  scripts= {"classpath:/schema.sql", "classpath:/data.sql"})
 @Sql(executionPhase=ExecutionPhase.AFTER_TEST_METHOD, scripts="classpath:/cleanup.sql")
 public class QuizServiceTest {
   
@@ -52,10 +53,10 @@ public class QuizServiceTest {
   
   @Test
   public void testInitRegistration() throws Exception {
-    InitRegistration actual = this.quizService.generateQuizId("test");
+    InitRegistration actual = this.quizService.generateQuizId("test1");
     InitRegistration expected = this.jdbcTemplate.query(
         "SELECT username, quiz_id, number_of_questions from Quiz where username = ?",
-        new Object[] {"test"}, new ResultSetExtractor<InitRegistration> () {
+        new Object[] {"test1"}, new ResultSetExtractor<InitRegistration> () {
 
           @Override
           public InitRegistration extractData(ResultSet rs)
@@ -78,7 +79,7 @@ public class QuizServiceTest {
     
     Assert.assertEquals(0,
         (int) this.jdbcTemplate.query(
-            "SELECT questions_asked from QuizStatus where quiz_id = ? ",
+            "SELECT questions_asked from QuizStatus where quiz_id = ?",
             new Object[] {actual.getQuizId()}, new ResultSetExtractor<Integer>() {
 
               @Override
@@ -95,8 +96,21 @@ public class QuizServiceTest {
   
   @Test
   public void testFetchQuestions() throws Exception {
-    //this.jdbcTemplate.query(
-          //"SELECT ", rse)
+    Assert.assertEquals(1,
+        (int) this.jdbcTemplate.query(
+            "SELECT questions_asked from QuizStatus where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                while (rs.next()) {
+                  return rs.getInt("questions_asked");
+                }
+                return null;
+              }
+              
+            }));
   }
 
 }
