@@ -70,7 +70,7 @@ public class QuizQuestionsDaoTest {
   
   @Test
   public void testUpdateQuizStatus() throws Exception {
-    Assert.assertEquals(0,  (int) this.jdbcTemplate.query(
+    Assert.assertEquals(1,  (int) this.jdbcTemplate.query(
         "SELECT questions_asked from QuizStatus where quiz_id = ?",
         new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
 
@@ -86,7 +86,7 @@ public class QuizQuestionsDaoTest {
         }));
     int row = this.questionsDao.updateQuizStatus("ABCDE12345");
     Assert.assertEquals(row, 1);
-    Assert.assertEquals(1, (int) this.jdbcTemplate.query(
+    Assert.assertEquals(2, (int) this.jdbcTemplate.query(
         "SELECT questions_asked from QuizStatus where quiz_id = ?",
         new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
 

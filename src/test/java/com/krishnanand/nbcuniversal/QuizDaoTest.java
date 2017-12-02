@@ -2,6 +2,8 @@ package com.krishnanand.nbcuniversal;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -13,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -52,11 +54,9 @@ public class QuizDaoTest {
   
   @Test
   public void getCurrentQuizStatus() throws Exception {
-    Assert.assertEquals(1, this.jdbcTemplate.update(
-        "INSERT INTO QuizStatus(quiz_id) VALUES(?)", new Object[] {"ABCDE12345"}));
     QuizStatus actual = this.quizDao.getCurrentQuizStatus("ABCDE12345");
     QuizStatus expected = new QuizStatus();
-    expected.setNumberOfAskedQuestions(0);
+    expected.setNumberOfAskedQuestions(1);
     expected.setNumberOfEligibleQuestions(3);
     expected.setQuizId("ABCDE12345");
     expected.setQuizEnded(false);
@@ -65,19 +65,18 @@ public class QuizDaoTest {
   
   @Test
   public void testInitialiseQuizStatus() throws Exception {
-    Assert.assertEquals(1, this.quizDao.initialiseQuizStatus("ABCDE12345"));
-    Assert.assertEquals(0,
-        (int) this.jdbcTemplate.query(
+    InitRegistration registration = this.quizDao.registerQuiz("test");
+    List<Integer> expected = new ArrayList<>();
+    expected.add(0);
+    this.quizDao.initialiseQuizStatus(registration.getQuizId());
+    Assert.assertEquals(expected,
+        this.jdbcTemplate.query(
             "SELECT questions_asked from QuizStatus where quiz_id = ? ",
-            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
+            new Object[] {registration.getQuizId()}, new RowMapper<Integer>() {
 
               @Override
-              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-                // TODO Auto-generated method stub
-                while (rs.next()) {
+              public Integer mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
                   return rs.getInt("questions_asked");
-                }
-                return null;
               }
               
             }));

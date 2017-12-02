@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +43,11 @@ public class QuizServiceTest {
   @Before
   public void setUp() throws Exception {
     this.jdbcTemplate = new JdbcTemplate(this.dataSource);
+  }
+  
+  @After
+  public void tearDown() throws Exception {
+    this.jdbcTemplate = null;
   }
   
   @Test
@@ -85,6 +91,12 @@ public class QuizServiceTest {
               }
               
             }));
+  }
+  
+  @Test
+  public void testFetchQuestions() throws Exception {
+    //this.jdbcTemplate.query(
+          //"SELECT ", rse)
   }
 
 }
