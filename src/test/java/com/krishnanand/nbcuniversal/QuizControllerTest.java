@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -93,12 +94,38 @@ public class QuizControllerTest {
   public void testFetchQuestions_Mock() throws Exception {
     ResponseEntity<InitRegistration> responseEntity = this.quizController.initialiseQuiz();
     InitRegistration response = responseEntity.getBody();
-    Assert.assertEquals(response.getUsername(), "test");
-    Assert.assertEquals(response.getNumberOfQuestions(), 3);
-    
     ResponseEntity<QuizQuestion> questionEntity =
         this.quizController.questions(response.getQuizId());
     Assert.assertNotNull(questionEntity.getBody());
+  }
+  
+  @Test
+  public void testFetchQuestions_Exhausted() throws Exception {
+    ResponseEntity<InitRegistration> responseEntity = this.quizController.initialiseQuiz();
+    InitRegistration response = responseEntity.getBody();
+    for (int i = 0; i < response.getNumberOfQuestions(); i++) {
+      ResponseEntity<QuizQuestion> questionEntity =
+          this.quizController.questions(response.getQuizId());
+      Assert.assertNotNull(questionEntity.getBody());
+    }
+    // Once more
+    ResponseEntity<QuizQuestion> questionEntity =
+        this.quizController.questions(response.getQuizId());
+    Assert.assertEquals(HttpStatus.NOT_FOUND, questionEntity.getStatusCode());
+  }
+  
+  @Test
+  public void testQuestionCorrectly() throws Exception {
+    ResponseEntity<InitRegistration> responseEntity =
+        this.quizController.initialiseQuiz();
+    InitRegistration response = responseEntity.getBody();
+    Answer answer = new Answer();
+    answer.setQuestionId(4);
+    answer.setDescription("Is July 25 independence day of United States of America?");
+    answer.setResponse(false);
+    this.quizController.answerQuestion(response.getQuizId(), answer);
+    
+    
   }
   
 }

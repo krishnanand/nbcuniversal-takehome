@@ -73,6 +73,7 @@ public class QuizService implements IQuizService {
   @Transactional
   public Solution checkAnswer(Answer answer) {
     Solution solution = this.questionsDao.checkAnswer(answer);
+    this.quizDao.updateScore(solution);
     return solution;
   }
 

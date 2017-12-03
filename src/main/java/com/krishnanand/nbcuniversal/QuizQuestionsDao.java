@@ -109,7 +109,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
    * Checks answer against the system.
    * 
    * @param answer answer
-   * @return
+   * @return solution
    */
   @Override
   public Solution checkAnswer(Answer answer) {
@@ -121,6 +121,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
           public Solution extractData(ResultSet rs) throws SQLException, DataAccessException {
             while (rs.next()) {
               Solution sol = new Solution();
+              sol.setQuizId(answer.getQuizId());
               sol.setCorrectAnswer(rs.getBoolean("answer"));
               sol.setPlayerAnswer(answer.isResponse());
               sol.setDescription(rs.getString("question_text"));

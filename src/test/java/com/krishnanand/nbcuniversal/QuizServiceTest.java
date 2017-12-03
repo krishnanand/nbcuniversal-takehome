@@ -187,5 +187,24 @@ public class QuizServiceTest {
     QuizQuestion shouldBeNull = this.quizService.fetchQuestion(actual.getQuizId());
     Assert.assertNull(shouldBeNull);
   }
+  
+  @Test
+  public void testCheckAnswer_CorrectAnswer() throws Exception {
+    InitRegistration actual = this.quizService.generateQuizId("test1");
+    QuizQuestion question = this.quizService.fetchQuestion(actual.getQuizId());
+    Answer answer = new Answer();
+    answer.setQuizId(question.getQuizId());
+    answer.setQuestionId(question.getQuestionId());
+    answer.setResponse(question.isAnswer());
+    answer.setDescription(question.getDescription());
+    
+    Solution actualSolution = this.quizService.checkAnswer(answer);
+    Solution expectedSolution = new Solution();
+    expectedSolution.setCorrectAnswer(question.isAnswer());
+    expectedSolution.setPlayerAnswer(answer.isResponse());
+    expectedSolution.setQuizId(actual.getQuizId());
+    expectedSolution.setDescription(answer.getDescription());
+    Assert.assertEquals(expectedSolution, actualSolution);
+  }
 
 }

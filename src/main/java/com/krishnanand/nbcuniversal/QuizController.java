@@ -37,9 +37,10 @@ public class QuizController {
   
 
   /**
-   * Fetches the questions to be played.
-   * @param quizId
-   * @return
+   * Fetches the questions to be answered.
+   * 
+   * @param quizId unique quiz identifier
+   * @return unique question
    */
   @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.GET, 
       produces="application/json; charset=UTF-8")
@@ -52,11 +53,11 @@ public class QuizController {
   }
   
   @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.POST,
-      produces="application/json;charset=UTF-8", consumes="application/json;charset=UTF-8")
-  ResponseEntity<Solution> answerQuestion(@PathVariable("quizId") String quizId,
+      produces="application/json;charset=UTF-8", consumes="application/json; charset=UTF-8")
+  public ResponseEntity<Solution> answerQuestion(@PathVariable("quizId") String quizId,
       @RequestBody final Answer answer) {
-    this.quizService.checkAnswer(answer);
-    return null;
+    Solution solution = this.quizService.checkAnswer(answer);
+    return new ResponseEntity<>(solution, HttpStatus.OK);
   }
 
 }
