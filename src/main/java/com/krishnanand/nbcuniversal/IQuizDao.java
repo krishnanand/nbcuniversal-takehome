@@ -31,5 +31,12 @@ public interface IQuizDao {
    * @return number of rows updated
    */
   int initialiseQuizStatus(String quizId);
+  
+  /**
+   * The implementation updates the score for a given quiz.
+   * @param solution instance of solution
+   * @return quiz score
+   */
+  int updateScore(Solution solution);
 
 }

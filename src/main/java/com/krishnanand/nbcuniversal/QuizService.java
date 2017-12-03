@@ -64,11 +64,16 @@ public class QuizService implements IQuizService {
   /**
    * Checks the solution against the system.
    * 
+   * <p>In addition the implementation updates the score after
+   * every answer.
+   * 
    * @param answer answer object
    */
   @Override
+  @Transactional
   public Solution checkAnswer(Answer answer) {
-    return this.questionsDao.checkAnswer(answer);
+    Solution solution = this.questionsDao.checkAnswer(answer);
+    return solution;
   }
 
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -27,7 +28,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes= {QuizDao.class, DatabaseCredentials.class})
-@Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD, scripts= {"classpath:/schema.sql", "classpath:/data.sql"})
+@Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD,
+    scripts= {"classpath:/schema.sql", "classpath:/data.sql"})
 @Sql(executionPhase=ExecutionPhase.AFTER_TEST_METHOD, scripts="classpath:/cleanup.sql")
 public class QuizDaoTest {
   
@@ -50,6 +52,47 @@ public class QuizDaoTest {
     Assert.assertEquals("test", registration.getUsername());
     Assert.assertEquals(3, registration.getNumberOfQuestions());
     Assert.assertTrue(registration.isActive());
+    InitRegistration expected = this.jdbcTemplate.query(
+        "SELECT username, quiz_id, number_of_questions FROM Quiz where quiz_id = ?" ,
+        new Object[] {registration.getQuizId()}, new ResultSetExtractor<InitRegistration>() {
+
+          @Override
+          public InitRegistration extractData(ResultSet rs)
+              throws SQLException, DataAccessException {
+            while(rs.next()) {
+              InitRegistration initRegistration = new InitRegistration();
+              initRegistration.setActive(true);
+              initRegistration.setNumberOfQuestions(rs.getInt("number_of_questions"));
+              initRegistration.setUsername(rs.getString("username"));
+              initRegistration.setQuizId(rs.getString("quiz_id"));
+              return initRegistration;
+            }
+            return null;
+          }
+        });
+    Assert.assertEquals(expected, registration);
+    Score actualScore = this.jdbcTemplate.query(
+        "SELECT quiz_id, correct_answers, incorrect_answers FROM Score where quiz_id = ?",
+        new Object[] {registration.getQuizId()}, new ResultSetExtractor<Score>() {
+
+          @Override
+          public Score extractData(ResultSet rs) throws SQLException, DataAccessException {
+            while(rs.next()) {
+              Score score = new Score();
+              score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
+              score.setCorrectAnswers(rs.getInt("correct_answers"));
+              score.setQuizId(registration.getQuizId());
+              score.calculateScore();
+              return score;
+            }
+            return null;
+          }
+        });
+    Score expectedScore = new Score();
+    expectedScore.setCorrectAnswers(0);
+    expectedScore.setIncorrectAnswers(0);
+    expectedScore.setQuizId(registration.getQuizId());
+    Assert.assertEquals(expectedScore, actualScore);
   }
   
   @Test
@@ -80,6 +123,27 @@ public class QuizDaoTest {
               }
               
             }));
+  }
+  
+  @Test
+  public void testUpdateScore_CorrectAnswer() throws Exception {
+    this.quizDao.initialiseScore("ABCDE12345");
+    Assert.assertEquals(
+        1,
+        (int) this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Score where quiz_id = ?",
+            new Object[] {"ABCDE12345"},
+            int.class));
+    Solution solution = new Solution();
+    solution.setQuizId("ABCDE12345");
+    solution.setCorrectAnswer(true);
+    solution.setPlayerAnswer(true);
+    solution.setDescription("Is earth round?");
+    this.quizDao.updateScore(solution);
+    Assert.assertEquals(
+        1,
+        (int) this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Score where quiz_id = ?",
+            new Object[] {"ABCDE12345"},
+            int.class));
   }
 
 }

@@ -14,8 +14,8 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 /**
- * An instance of this class represents the data access layer connecting the
- * data to the database.
+ * An instance of this class represents a single point of entry for all database operations
+ * related to quiz..
  * 
  * @author krishnanand (Kartik Krishnanand)
  */
@@ -89,10 +89,19 @@ public class QuizDao implements IQuizDao {
                     }
                     return null;
                   }});
+        
+        this.initialiseScore(initRegistration.getQuizId());
         return initRegistration;
       }
     }
     return null;
+  }
+  
+  void initialiseScore(String quizId) {
+   // Initialise the score.
+    this.jdbcTemplate.update(
+        "INSERT INTO Score(quiz_id, correct_answers, incorrect_answers) VALUES(?, ?, ?)",
+        new Object[] {quizId, 0, 0});
   }
 
   /**
@@ -138,6 +147,31 @@ public class QuizDao implements IQuizDao {
     return this.jdbcTemplate.update(
         "INSERT INTO QuizStatus(quiz_id) VALUES(?)",
         new Object[] {quizId});
+  }
+
+  /**
+   * The function increments the {@code correct_answers} by 1 if the quiz solution is correct, and
+   * the {@code incorrect_answers} if the quiz solution is not correct.
+   * 
+   * @param solution value encapsulating the solution
+   * @return score
+   */ 
+  @Override
+  public int updateScore(final Solution solution) {
+    StringBuilder sb = new StringBuilder();
+    if (solution.isCorrectAnswer() == solution.isPlayerAnswer()) {
+      sb.append("UPDATE Score SET correct_answers = correct_answers + 1 WHERE quiz_id = ?");
+    } else {
+      sb.append("UPDATE Score SET incorrect_answers = incorrect_answers + 1 WHERE quiz_id = ?");
+    }
+    return this.jdbcTemplate.update(sb.toString(), new PreparedStatementSetter() {
+
+      @Override
+      public void setValues(PreparedStatement ps) throws SQLException {
+        ps.setString(1, solution.getQuizId());
+      }
+      
+    });
   }
 
 }
