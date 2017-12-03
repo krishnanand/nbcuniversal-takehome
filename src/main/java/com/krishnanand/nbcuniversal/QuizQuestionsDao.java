@@ -9,8 +9,10 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -101,5 +103,34 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
     return this.jdbcTemplate.update(
         "INSERT INTO QuizQuestions(quiz_id, question_id) VALUES(?, ?)",
         new Object[] {quizId, questionId});
+  }
+
+  /**
+   * Checks answer against the system.
+   * 
+   * @param answer answer
+   * @return
+   */
+  @Override
+  public Solution checkAnswer(Answer answer) {
+    Solution solution = this.jdbcTemplate.query(
+        "SELECT question_id, question_text, answer FROM Questions where question_id = ?",
+        new Object[] {answer.getQuestionId()}, new ResultSetExtractor<Solution>() {
+
+          @Override
+          public Solution extractData(ResultSet rs) throws SQLException, DataAccessException {
+            while (rs.next()) {
+              Solution sol = new Solution();
+              sol.setCorrectAnswer(rs.getBoolean("answer"));
+              sol.setPlayerAnswer(answer.isResponse());
+              sol.setDescription(rs.getString("question_text"));
+              return sol;
+            }
+            return null;
+          }
+          
+        });
+    
+    return solution;
   }
 }

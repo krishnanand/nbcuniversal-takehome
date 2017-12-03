@@ -33,5 +33,13 @@ public interface IQuizQuestionsDao {
    * @param questionId question id to be inserted
    */
   int markQuestionsAsAsked(String quizId, int questionId);
+  
+  /**
+   * Checks answer against the system.
+   * 
+   * @param answer answer
+   * @return
+   */
+  Solution checkAnswer(Answer answer);
 
 }

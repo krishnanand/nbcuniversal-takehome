@@ -5,8 +5,28 @@ package com.krishnanand.nbcuniversal;
  */
 public interface IQuizService {
   
+  /**
+   * An implementation of this method will return a unique question or
+   *  {@code null} if the attempts are exhausted.
+   *  
+   * @param quizId unique quiz id
+   * @return instance representing a question; or {@code null}
+   */
   QuizQuestion fetchQuestion(String quizId);
   
+  /**
+   * Generates the registration details.
+   * 
+   * @param username username for which a quiz id is to be generated
+   * @return registration details
+   */
   InitRegistration generateQuizId(String username);
+  
+  /**
+   * Verifies the answer against the system.
+   * @param answer
+   * @return
+   */
+  Solution checkAnswer(Answer answer);
 
 }

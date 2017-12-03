@@ -61,4 +61,14 @@ public class QuizService implements IQuizService {
     return initRegistration;
   }
 
+  /**
+   * Checks the solution against the system.
+   * 
+   * @param answer answer object
+   */
+  @Override
+  public Solution checkAnswer(Answer answer) {
+    return this.questionsDao.checkAnswer(answer);
+  }
+
 }

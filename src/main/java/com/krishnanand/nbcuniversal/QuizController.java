@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -41,7 +41,6 @@ public class QuizController {
    * @param quizId
    * @return
    */
-  @ResponseBody
   @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.GET, 
       produces="application/json; charset=UTF-8")
   ResponseEntity<QuizQuestion> questions(@PathVariable("quizId") String quizId) {
@@ -50,6 +49,14 @@ public class QuizController {
       return new ResponseEntity<QuizQuestion>(HttpStatus.NOT_FOUND);
     }
     return new ResponseEntity<QuizQuestion>(question, HttpStatus.OK);
+  }
+  
+  @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.POST,
+      produces="application/json;charset=UTF-8", consumes="application/json;charset=UTF-8")
+  ResponseEntity<Solution> answerQuestion(@PathVariable("quizId") String quizId,
+      @RequestBody final Answer answer) {
+    this.quizService.checkAnswer(answer);
+    return null;
   }
 
 }

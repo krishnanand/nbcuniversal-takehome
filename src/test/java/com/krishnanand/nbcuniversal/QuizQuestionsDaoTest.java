@@ -112,5 +112,19 @@ public class QuizQuestionsDaoTest {
         "SELECT count(question_id) from QuizQuestions where quiz_id = ? AND question_id = ?",
         new Object[] {"ABCDE12345", 2}, int.class));
   }
+  
+  @Test
+  public void testCheckAnswer() throws Exception {
+    Answer answer = new Answer();
+    answer.setQuestionId(4);
+    answer.setDescription("Is July 25 independence day of United States of America?");
+    answer.setResponse(false);
+    Solution actual = this.questionsDao.checkAnswer(answer);
+    Solution expected = new Solution();
+    expected.setCorrectAnswer(false);
+    expected.setDescription("Is July 25 independence day of United States of America?");
+    expected.setPlayerAnswer(false);
+    Assert.assertEquals(expected, actual);
+  }
 
 }
