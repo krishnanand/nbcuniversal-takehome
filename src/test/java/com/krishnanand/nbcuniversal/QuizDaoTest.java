@@ -133,17 +133,76 @@ public class QuizDaoTest {
         (int) this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Score where quiz_id = ?",
             new Object[] {"ABCDE12345"},
             int.class));
-    Solution solution = new Solution();
-    solution.setQuizId("ABCDE12345");
-    solution.setCorrectAnswer(true);
-    solution.setPlayerAnswer(true);
-    solution.setDescription("Is earth round?");
-    this.quizDao.updateScore(solution);
+    Solution expected = new Solution();
+    expected.setQuizId("ABCDE12345");
+    expected.setCorrectAnswer(true);
+    expected.setPlayerAnswer(true);
+    expected.setDescription("Is earth round?");
+    this.quizDao.updateScore(expected);
+    Score expectedScore = new Score();
+    expectedScore.setCorrectAnswers(1);
+    expectedScore.setIncorrectAnswers(0);
+    expectedScore.calculateScore();
+    expectedScore.setQuizId("ABCDE12345");
+    Score actual = this.jdbcTemplate.query(
+            "SELECT incorrect_answers, correct_answers FROM Score where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Score>() {
+
+              @Override
+              public Score extractData(ResultSet rs) throws SQLException, DataAccessException {
+                while(rs.next()) {
+                  Score score = new Score();
+                  score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
+                  score.setCorrectAnswers(rs.getInt("correct_answers"));
+                  score.setQuizId("ABCDE12345");
+                  score.calculateScore();
+                  return score;
+                }
+                return null;
+              }
+              
+            });
+    Assert.assertEquals(expectedScore, actual);
+  }
+  
+  @Test
+  public void testUpdateScore_IncorrectAnswer() throws Exception {
+    this.quizDao.initialiseScore("ABCDE12345");
     Assert.assertEquals(
         1,
         (int) this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Score where quiz_id = ?",
             new Object[] {"ABCDE12345"},
             int.class));
+    Solution expected = new Solution();
+    expected.setQuizId("ABCDE12345");
+    expected.setCorrectAnswer(true);
+    expected.setPlayerAnswer(false);
+    expected.setDescription("Is earth round?");
+    this.quizDao.updateScore(expected);
+    Score expectedScore = new Score();
+    expectedScore.setCorrectAnswers(0);
+    expectedScore.setIncorrectAnswers(1);
+    expectedScore.calculateScore();
+    expectedScore.setQuizId("ABCDE12345");
+    Score actual = this.jdbcTemplate.query(
+            "SELECT incorrect_answers, correct_answers FROM Score where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Score>() {
+
+              @Override
+              public Score extractData(ResultSet rs) throws SQLException, DataAccessException {
+                while(rs.next()) {
+                  Score score = new Score();
+                  score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
+                  score.setCorrectAnswers(rs.getInt("correct_answers"));
+                  score.setQuizId("ABCDE12345");
+                  score.calculateScore();
+                  return score;
+                }
+                return null;
+              }
+              
+            });
+    Assert.assertEquals(expectedScore, actual);
   }
 
 }

@@ -44,7 +44,7 @@ public class Score {
   }
   
   public void calculateScore() {
-    this.score = this.correctAnswers + this.incorrectAnswers;
+    this.score = this.correctAnswers;
   }
 
   @Override
