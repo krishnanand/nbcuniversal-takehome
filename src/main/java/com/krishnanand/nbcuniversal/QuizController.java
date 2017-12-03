@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController("/nbcuniversal")
 public class QuizController {
   
-  @Autowired
-  private IQuizService quizService;
+  private final IQuizService quizService;
   
-  public void setQuizService(IQuizService quizService) {
+  @Autowired
+  public QuizController(IQuizService quizService) {
     this.quizService = quizService;
   }
+  
 
   /**
    * Initialises the quiz.
@@ -42,9 +43,13 @@ public class QuizController {
    */
   @ResponseBody
   @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.GET, 
-      produces="application/json")
-  QuizQuestion fetchNextQuestion(@PathVariable("quizId") String quizId) {
-    return this.quizService.fetchQuestion(quizId);
+      produces="application/json; charset=UTF-8")
+  ResponseEntity<QuizQuestion> questions(@PathVariable("quizId") String quizId) {
+    QuizQuestion question = this.quizService.fetchQuestion(quizId);
+    if (question == null) {
+      return new ResponseEntity<QuizQuestion>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<QuizQuestion>(question, HttpStatus.OK);
   }
 
 }

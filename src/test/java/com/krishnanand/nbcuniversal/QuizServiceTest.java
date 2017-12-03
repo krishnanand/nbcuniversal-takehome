@@ -100,6 +100,13 @@ public class QuizServiceTest {
   }
   
   @Test
+  public void testFetchQuestionsAfterRegistration() throws Exception {
+    InitRegistration actual = this.quizService.generateQuizId("test1");
+    QuizQuestion question = this.quizService.fetchQuestion(actual.getQuizId());
+    Assert.assertNotNull(question);
+  }
+  
+  @Test
   public void testFetchQuestions() throws Exception {
     Assert.assertEquals(1,
         (int) this.jdbcTemplate.query(

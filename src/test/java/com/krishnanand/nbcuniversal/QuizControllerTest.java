@@ -1,12 +1,16 @@
 package com.krishnanand.nbcuniversal;
 
+import javax.sql.DataSource;
+
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,28 +23,38 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 /**
+ * Unit test for {@link QuizControllerTest}.
+ * 
  * @author krishnanand (Kartik Krishnanand)
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes= {App.class, QuizService.class, QuizDao.class, DatabaseCredentials.class})
-@Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD, scripts="classpath:/schema.sql")
+@SpringBootTest(classes= {App.class})
+@Sql(executionPhase=ExecutionPhase.BEFORE_TEST_METHOD,
+   scripts= {"classpath:/schema.sql", "classpath:/data.sql"})
 @Sql(executionPhase=ExecutionPhase.AFTER_TEST_METHOD, scripts="classpath:/cleanup.sql")
 public class QuizControllerTest {
   
-  @InjectMocks
+  @Autowired
   private QuizController quizController;
   
   @Autowired
   private WebApplicationContext context;
   
+  @Autowired
+  private DataSource dataSource;
+  
   private MockMvc mvc;
+  
+  private ObjectMapper mapper;
+  
+  private JdbcTemplate jdbcTemplate;
   
   @Before
   public void setUp() throws Exception {
     this.mvc =  MockMvcBuilders.webAppContextSetup(context).build();
+    this.mapper = new ObjectMapper();
+    this.jdbcTemplate = new JdbcTemplate(this.dataSource);
   }
   
   @Test
@@ -49,10 +63,43 @@ public class QuizControllerTest {
         MockMvcRequestBuilders.post("/nbcuniversal/quiz")).
         andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
     byte[] response = result.getResponse().getContentAsByteArray();
-    ObjectMapper objectMapper = new ObjectMapper();
+    
     InitRegistration registrationResponse =
-        objectMapper.readValue(response, InitRegistration.class);
+        mapper.readValue(response, InitRegistration.class);
     Assert.assertEquals(registrationResponse.getUsername(), "test");
     Assert.assertEquals(registrationResponse.getNumberOfQuestions(), 3);
+    Assert.assertTrue(registrationResponse.isActive());
+    Assert.assertEquals(1, (int) this.jdbcTemplate.queryForObject(
+        "SELECT COUNT(quiz_id) from Quiz where username = ? AND quiz_id = ?",
+        new Object[] {"test", registrationResponse.getQuizId()}, int.class));
   }
+  
+  @Test
+  public void testFetchQuestions() throws Exception {
+    MvcResult initResult = this.mvc.perform(
+        MockMvcRequestBuilders.post("/nbcuniversal/quiz")).
+        andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
+    byte[] initResponse = initResult.getResponse().getContentAsByteArray();
+    InitRegistration registrationResponse =
+        mapper.readValue(initResponse, InitRegistration.class);
+    MvcResult result = this.mvc.perform(
+        MockMvcRequestBuilders.get("/nbcuniversal/quiz/" + registrationResponse.getQuizId())).
+        andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+    byte[] response = result.getResponse().getContentAsByteArray();
+    QuizQuestion quizQuestion = this.mapper.readValue(response, QuizQuestion.class);
+    Assert.assertNotNull(quizQuestion);
+  }
+  
+  @Test
+  public void testFetchQuestions_Mock() throws Exception {
+    ResponseEntity<InitRegistration> responseEntity = this.quizController.initialiseQuiz();
+    InitRegistration response = responseEntity.getBody();
+    Assert.assertEquals(response.getUsername(), "test");
+    Assert.assertEquals(response.getNumberOfQuestions(), 3);
+    
+    ResponseEntity<QuizQuestion> questionEntity =
+        this.quizController.questions(response.getQuizId());
+    Assert.assertNotNull(questionEntity.getBody());
+  }
+  
 }

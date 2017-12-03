@@ -42,6 +42,9 @@ public class QuizService implements IQuizService {
     }
     //
     QuizQuestion question = this.questionsDao.fetchUniqueQuizQuestion(quizId);
+    if (question == null) {
+      return null;
+    }
     this.questionsDao.updateQuizStatus(quizId);
     this.questionsDao.markQuestionsAsAsked(quizId, question.getQuestionId());
     return question;

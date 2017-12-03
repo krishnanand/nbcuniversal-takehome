@@ -45,11 +45,12 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
   public QuizQuestion fetchUniqueQuizQuestion(String quizId) {
     StringBuilder sb = new StringBuilder();
     sb.append("SELECT q.question_id, q.question_text, q.answer FROM Questions q ");
-    sb.append("LEFT JOIN QuizQuestions qq ON ");
-    sb.append("q.question_id = qq.question_id WHERE q.question_id NOT IN ");
-    sb.append("(SELECT qq.question_id FROM Questions WHERE qq.quiz_id = ?)");
+    sb.append("WHERE NOT EXISTS (SELECT 1 FROM QuizQuestions WHERE question_id = q.question_id ");
+    sb.append(" AND quiz_id = ?) ");
+    sb.append("OR NOT EXISTS (SELECT 1 FROM QuizQuestions WHERE quiz_id = ?)");
     List<QuizQuestion> questions = 
-        this.jdbcTemplate.query(sb.toString(), new Object[] {quizId}, new RowMapper<QuizQuestion>() {
+        this.jdbcTemplate.query(
+            sb.toString(), new Object[] {quizId, quizId}, new RowMapper<QuizQuestion>() {
 
           @Override
           public QuizQuestion mapRow(ResultSet rs, int rowNum) throws SQLException {
