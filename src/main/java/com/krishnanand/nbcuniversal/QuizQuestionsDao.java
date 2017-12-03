@@ -60,7 +60,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
             qq.setQuestionId(rs.getInt("question_id"));
             qq.setQuizId(quizId);
             qq.setAnswer(rs.getBoolean("answer"));
-            qq.setDescription(rs.getString("question_text"));
+            qq.setQuestion(rs.getString("question_text"));
             return qq;
           }
         });

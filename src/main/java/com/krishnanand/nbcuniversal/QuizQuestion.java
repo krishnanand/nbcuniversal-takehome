@@ -2,6 +2,7 @@ package com.krishnanand.nbcuniversal;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -15,10 +16,12 @@ public class QuizQuestion {
   
   private String quizId;
   
+  @JsonIgnore
   private int questionId;
   
-  private String description;
+  private String question;
   
+  @JsonIgnore
   private boolean answer;
 
   public String getQuizId() {
@@ -37,12 +40,12 @@ public class QuizQuestion {
     this.questionId = questionId;
   }
 
-  public String getDescription() {
-    return description;
+  public String getQuestion() {
+    return question;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setQuestion(String description) {
+    this.question = description;
   }
 
   public boolean isAnswer() {
@@ -61,7 +64,7 @@ public class QuizQuestion {
     builder.append(", questionId=");
     builder.append(questionId);
     builder.append(", description=");
-    builder.append(description);
+    builder.append(question);
     builder.append(", answer=");
     builder.append(answer);
     builder.append("]");
@@ -71,7 +74,7 @@ public class QuizQuestion {
   @Override
   public int hashCode() {
     return Objects.hash(
-        this.answer, this.description, this.questionId, this.quizId);
+        this.answer, this.question, this.questionId, this.quizId);
   }
 
   @Override
@@ -89,11 +92,11 @@ public class QuizQuestion {
     if (answer != other.answer) {
       return false;
     }
-    if (description == null) {
-      if (other.description != null) {
+    if (question == null) {
+      if (other.question != null) {
         return false;
       }
-    } else if (!description.equals(other.description)) {
+    } else if (!question.equals(other.question)) {
       return false;
     }
     if (this.questionId != other.getQuestionId()) {

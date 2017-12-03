@@ -29,8 +29,7 @@ public class QuizController {
    * 
    * @return registration information
    */
-  @RequestMapping(name="/quiz", method=RequestMethod.POST,
-       produces="application/json; charset=UTF-8")
+  @RequestMapping(value="/quiz", method=RequestMethod.POST)
   ResponseEntity<InitRegistration> initialiseQuiz() {
     InitRegistration registration = this.quizService.generateQuizId("test");
     return new ResponseEntity<InitRegistration>(registration, HttpStatus.CREATED);
@@ -43,9 +42,8 @@ public class QuizController {
    * @param quizId unique quiz identifier
    * @return unique question
    */
-  @RequestMapping(name="/quiz/{quizId}/questions", method=RequestMethod.GET, 
-      produces="application/json; charset=UTF-8")
-  public ResponseEntity<QuizQuestion> questions(@PathVariable("quizId") String quizId) {
+  @RequestMapping(value="/quiz/{quizId}/questions", method=RequestMethod.GET)
+  public ResponseEntity<QuizQuestion> questions(@PathVariable String quizId) {
     QuizQuestion question = this.quizService.fetchQuestion(quizId);
     if (question == null) {
       return new ResponseEntity<QuizQuestion>(HttpStatus.NOT_FOUND);
@@ -53,16 +51,15 @@ public class QuizController {
     return new ResponseEntity<QuizQuestion>(question, HttpStatus.OK);
   }
   
-  @RequestMapping(name="/quiz/{quizId}/questions", method=RequestMethod.POST,
-      produces="application/json;charset=UTF-8", consumes="application/json; charset=UTF-8")
-  public ResponseEntity<Solution> answerQuestion(@PathVariable("quizId") String quizId,
+  @RequestMapping(value="/quiz/{quizId}/questions", method=RequestMethod.POST)
+  public ResponseEntity<Solution> answerQuestion(String quizId,
       @RequestBody final Answer answer) {
     Solution solution = this.quizService.checkAnswer(answer);
     return new ResponseEntity<>(solution, HttpStatus.OK);
   }
   
-  @RequestMapping(name="/quiz/{quizId}/score", method=RequestMethod.GET)
-  public Score getScore(@PathVariable("quizId") String quizId) {
+  @RequestMapping(value="/quiz/{quizId}/score", method=RequestMethod.GET)
+  public Score getScore(@PathVariable String quizId) {
     return this.quizService.getScore(quizId);
   }
 }

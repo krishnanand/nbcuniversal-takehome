@@ -196,7 +196,7 @@ public class QuizServiceTest {
     answer.setQuizId(question.getQuizId());
     answer.setQuestionId(question.getQuestionId());
     answer.setResponse(question.isAnswer());
-    answer.setDescription(question.getDescription());
+    answer.setDescription(question.getQuestion());
     
     Solution actualSolution = this.quizService.checkAnswer(answer);
     Solution expectedSolution = new Solution();
