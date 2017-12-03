@@ -170,8 +170,29 @@ public class QuizDao implements IQuizDao {
       public void setValues(PreparedStatement ps) throws SQLException {
         ps.setString(1, solution.getQuizId());
       }
-      
     });
+  }
+
+
+  @Override
+  public Score getCurrentScore(String quizId) {
+    Score score = this.jdbcTemplate.query(
+        "SELECT correct_answers, incorrect_answers FROM Score where quiz_id = ?",
+        new Object[] {quizId}, new ResultSetExtractor<Score>() {
+
+          @Override
+          public Score extractData(ResultSet rs) throws SQLException, DataAccessException {
+            while(rs.next()) {
+              Score score = new Score();
+              score.setQuizId(quizId);
+              score.setCorrectAnswers(rs.getInt("correct_answers"));
+              score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
+              return score;
+            }
+            return null;
+          }
+        });
+    return score;
   }
 
 }

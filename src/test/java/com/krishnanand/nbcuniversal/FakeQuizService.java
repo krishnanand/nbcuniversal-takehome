@@ -68,4 +68,13 @@ public class FakeQuizService implements IQuizService {
     return solution;
   }
 
+  /* (non-Javadoc)
+   * @see com.krishnanand.nbcuniversal.IQuizService#getScore(java.lang.String)
+   */
+  @Override
+  public Score getScore(String quizId) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

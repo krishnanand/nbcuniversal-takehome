@@ -28,5 +28,12 @@ public interface IQuizService {
    * @return
    */
   Solution checkAnswer(Answer answer);
-
+  
+  /**
+   * Gets the score for quiz id.
+   * 
+   * @param quizId quiz id
+   * @return score
+   */
+  Score getScore(String quizId);
 }

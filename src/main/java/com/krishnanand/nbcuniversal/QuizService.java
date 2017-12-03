@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service implementation to implement the quiz service.
+ * 
  * @author krishnanand (Kartik Krishnanand)
  */
 @Component
@@ -75,6 +76,15 @@ public class QuizService implements IQuizService {
     Solution solution = this.questionsDao.checkAnswer(answer);
     this.quizDao.updateScore(solution);
     return solution;
+  }
+
+
+  /**
+   * Returns the score.
+   */
+  @Override
+  public Score getScore(String quizId) {
+    return this.quizDao.getCurrentScore(quizId);
   }
 
 }

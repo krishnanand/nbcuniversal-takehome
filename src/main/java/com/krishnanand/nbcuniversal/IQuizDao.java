@@ -38,5 +38,10 @@ public interface IQuizDao {
    * @return quiz score
    */
   int updateScore(Solution solution);
+  
+  /**
+   * Fetches the current score for a quiz id.
+   */
+  Score getCurrentScore(String quizId);
 
 }

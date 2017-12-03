@@ -83,7 +83,8 @@ public class QuizControllerTest {
     InitRegistration registrationResponse =
         mapper.readValue(initResponse, InitRegistration.class);
     MvcResult result = this.mvc.perform(
-        MockMvcRequestBuilders.get("/nbcuniversal/quiz/" + registrationResponse.getQuizId())).
+        MockMvcRequestBuilders.get(
+            "/nbcuniversal/quiz/" + registrationResponse.getQuizId() + "/questions")).
         andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     byte[] response = result.getResponse().getContentAsByteArray();
     QuizQuestion quizQuestion = this.mapper.readValue(response, QuizQuestion.class);
@@ -120,12 +121,53 @@ public class QuizControllerTest {
         this.quizController.initialiseQuiz();
     InitRegistration response = responseEntity.getBody();
     Answer answer = new Answer();
+    answer.setQuizId(response.getQuizId());
     answer.setQuestionId(4);
     answer.setDescription("Is July 25 independence day of United States of America?");
     answer.setResponse(false);
+    ResponseEntity<Solution> actualSolution =
+        this.quizController.answerQuestion(response.getQuizId(), answer);
+    Solution expectedSolution = new Solution();
+    expectedSolution.setQuizId(response.getQuizId());
+    expectedSolution.setDescription(answer.getDescription());
+    expectedSolution.setCorrectAnswer(false);
+    expectedSolution.setPlayerAnswer(answer.isResponse());
+    Assert.assertEquals(expectedSolution, actualSolution.getBody());
+  }
+  
+  @Test
+  public void testQuestionInCorrectly() throws Exception {
+    ResponseEntity<InitRegistration> responseEntity =
+        this.quizController.initialiseQuiz();
+    InitRegistration response = responseEntity.getBody();
+    Answer answer = new Answer();
+    answer.setQuizId(response.getQuizId());
+    answer.setQuestionId(4);
+    answer.setDescription("Is July 25 independence day of United States of America?");
+    answer.setResponse(true);
     this.quizController.answerQuestion(response.getQuizId(), answer);
-    
-    
+    ResponseEntity<Solution> actualSolution =
+        this.quizController.answerQuestion(response.getQuizId(), answer);
+    Solution expectedSolution = new Solution();
+    expectedSolution.setQuizId(response.getQuizId());
+    expectedSolution.setDescription(answer.getDescription());
+    expectedSolution.setCorrectAnswer(false);
+    expectedSolution.setPlayerAnswer(answer.isResponse());
+    Assert.assertEquals(expectedSolution, actualSolution.getBody());
+  }
+  
+  @Test
+  public void testGetScore() throws Exception {
+    ResponseEntity<InitRegistration> responseEntity =
+        this.quizController.initialiseQuiz();
+    InitRegistration registration = responseEntity.getBody();
+    Score actual = this.quizController.getScore(registration.getQuizId());
+    Score expected = new Score();
+    expected.setQuizId(registration.getQuizId());
+    expected.setCorrectAnswers(0);
+    expected.setIncorrectAnswers(0);
+    expected.calculateScore();
+    Assert.assertEquals(expected, actual);
   }
   
 }

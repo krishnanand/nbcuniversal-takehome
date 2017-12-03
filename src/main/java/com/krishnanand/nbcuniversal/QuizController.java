@@ -26,7 +26,8 @@ public class QuizController {
 
   /**
    * Initialises the quiz.
-   * @return
+   * 
+   * @return registration information
    */
   @RequestMapping(name="/quiz", method=RequestMethod.POST,
        produces="application/json; charset=UTF-8")
@@ -42,9 +43,9 @@ public class QuizController {
    * @param quizId unique quiz identifier
    * @return unique question
    */
-  @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.GET, 
+  @RequestMapping(name="/quiz/{quizId}/questions", method=RequestMethod.GET, 
       produces="application/json; charset=UTF-8")
-  ResponseEntity<QuizQuestion> questions(@PathVariable("quizId") String quizId) {
+  public ResponseEntity<QuizQuestion> questions(@PathVariable("quizId") String quizId) {
     QuizQuestion question = this.quizService.fetchQuestion(quizId);
     if (question == null) {
       return new ResponseEntity<QuizQuestion>(HttpStatus.NOT_FOUND);
@@ -52,12 +53,16 @@ public class QuizController {
     return new ResponseEntity<QuizQuestion>(question, HttpStatus.OK);
   }
   
-  @RequestMapping(name="/quiz/{quizId}", method=RequestMethod.POST,
+  @RequestMapping(name="/quiz/{quizId}/questions", method=RequestMethod.POST,
       produces="application/json;charset=UTF-8", consumes="application/json; charset=UTF-8")
   public ResponseEntity<Solution> answerQuestion(@PathVariable("quizId") String quizId,
       @RequestBody final Answer answer) {
     Solution solution = this.quizService.checkAnswer(answer);
     return new ResponseEntity<>(solution, HttpStatus.OK);
   }
-
+  
+  @RequestMapping(name="/quiz/{quizId}/score", method=RequestMethod.GET)
+  public Score getScore(@PathVariable("quizId") String quizId) {
+    return this.quizService.getScore(quizId);
+  }
 }
