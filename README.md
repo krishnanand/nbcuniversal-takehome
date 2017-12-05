@@ -101,6 +101,12 @@ In case of an error, a different kind of payload is returned which describes any
 
 The error response is defined as follows.
 
+● HTTP status code 200 OK
+
+but the response body contains error messages
+
+● Response Body Properties
+
 | Name | Type | Description |
 | :---         |     :---      | :--- |
 | errors  | array   | array of errors |
@@ -154,8 +160,11 @@ The sample request is given below
    "response":false
 }
 ````
+A successful response will include
 
-The sample response format is given below
+● a status code of 200 OK
+
+● Response body format is given below
 
 | Name | Type | Description |
 | :---         |     :---      | :--- |
@@ -175,6 +184,15 @@ The sample response is given below
 ````
 
 In case of an error, a different kind of payload is returned which describes any error conditions. 
+
+The error response is defined as follows.
+
+● HTTP status code 200 OK
+
+but the response body contains error messages specific to the issue.
+
+● Response Body Properties
+
 
 The error response is defined as follows.
 
