@@ -1,5 +1,7 @@
 package com.krishnanand.nbcuniversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Represents the solution to the answer.
  * 
@@ -7,6 +9,7 @@ package com.krishnanand.nbcuniversal;
  */
 public class Solution {
   
+  @JsonIgnore
   private String quizId;
   
   private String question;

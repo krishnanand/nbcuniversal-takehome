@@ -91,7 +91,9 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Score getScore(String quizId) {
-    return this.quizDao.getCurrentScore(quizId);
+    Score score = this.quizDao.getCurrentScore(quizId);
+    score.calculateScore();
+    return score;
   }
 
 }
