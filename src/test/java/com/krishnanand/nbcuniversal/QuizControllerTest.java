@@ -73,7 +73,7 @@ public class QuizControllerTest {
     // Once more
     ResponseEntity<QuizQuestion> questionEntity =
         this.quizController.questions(response.getQuizId());
-    Assert.assertEquals(HttpStatus.TOO_MANY_REQUESTS, questionEntity.getStatusCode());
+    Assert.assertEquals(HttpStatus.OK, questionEntity.getStatusCode());
   }
   
   @Test

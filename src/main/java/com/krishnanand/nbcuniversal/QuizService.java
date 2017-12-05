@@ -38,14 +38,23 @@ public class QuizService implements IQuizService {
   @Transactional
   public QuizQuestion fetchQuestion(String quizId) {
     QuizStatus current = this.quizDao.getCurrentQuizStatus(quizId);
-    if (current == null || current.isQuizEnded()) {
+    if (current == null) {
+      QuizQuestion qq = new QuizQuestion();
+      qq.addError(404, "No quiz was found for quiz id " + quizId);
+      return  qq;
+    }
+    if (current.isQuizEnded()) {
       this.quizDao.markQuizAsCompleted(quizId);
-      return null;
+      QuizQuestion qq = new QuizQuestion();
+      qq.addError(429, "The quiz " + quizId + "is no longer active.");
+      return qq;
     }
     //
     QuizQuestion question = this.questionsDao.fetchUniqueQuizQuestion(quizId);
     if (question == null) {
-      return null;
+      question = new QuizQuestion();
+      question.addError(404, "No unique questions were found for quiz Id " + quizId);
+      return question;
     }
     this.questionsDao.updateQuizStatus(quizId);
     this.questionsDao.markQuestionAsAsked(quizId, question.getQuestionId());

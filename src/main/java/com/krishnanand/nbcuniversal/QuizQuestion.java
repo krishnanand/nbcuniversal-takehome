@@ -1,6 +1,7 @@
 package com.krishnanand.nbcuniversal;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,12 +13,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author krishnanand (Kartik Krishnanand)
  */
 @JsonInclude(Include.NON_NULL)
-public class QuizQuestion {
+public class QuizQuestion implements IError {
   
   @JsonIgnore
   private String quizId;
   
-  private int questionId;
+  private Integer questionId;
   
   private String question;
   
@@ -27,16 +28,27 @@ public class QuizQuestion {
   public String getQuizId() {
     return quizId;
   }
+  
+  @JsonInclude(value=Include.NON_EMPTY)
+  private List<IError.Error> errors;
+  
+  public QuizQuestion() {
+    this.errors = new ArrayList<>();
+  }
+  
+  public void addError(int code, String message) {
+    this.errors.add(new IError.Error(code, message));
+  }
 
   public void setQuizId(String quizId) {
     this.quizId = quizId;
   }
 
-  public int getQuestionId() {
+  public Integer getQuestionId() {
     return questionId;
   }
 
-  public void setQuestionId(int questionId) {
+  public void setQuestionId(Integer questionId) {
     this.questionId = questionId;
   }
 
@@ -57,24 +69,41 @@ public class QuizQuestion {
   }
 
   @Override
+  public List<IError.Error> getErrors() {
+    return errors;
+  }
+
+  public void setErrors(List<IError.Error> errors) {
+    this.errors = errors;
+  }
+
+  @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("QuizQuestion [quizId=");
     builder.append(quizId);
     builder.append(", questionId=");
     builder.append(questionId);
-    builder.append(", description=");
+    builder.append(", question=");
     builder.append(question);
     builder.append(", answer=");
     builder.append(answer);
+    builder.append(", errors=");
+    builder.append(errors);
     builder.append("]");
     return builder.toString();
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(
-        this.answer, this.question, this.questionId, this.quizId);
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + (answer ? 1231 : 1237);
+    result = prime * result + ((errors == null) ? 0 : errors.hashCode());
+    result = prime * result + ((question == null) ? 0 : question.hashCode());
+    result = prime * result + questionId;
+    result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
+    return result;
   }
 
   @Override
@@ -92,6 +121,13 @@ public class QuizQuestion {
     if (answer != other.answer) {
       return false;
     }
+    if (errors == null) {
+      if (other.errors != null) {
+        return false;
+      }
+    } else if (!errors.equals(other.errors)) {
+      return false;
+    }
     if (question == null) {
       if (other.question != null) {
         return false;
@@ -99,7 +135,7 @@ public class QuizQuestion {
     } else if (!question.equals(other.question)) {
       return false;
     }
-    if (this.questionId != other.getQuestionId()) {
+    if (questionId != other.questionId) {
       return false;
     }
     if (quizId == null) {

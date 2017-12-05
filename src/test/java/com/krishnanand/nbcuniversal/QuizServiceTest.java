@@ -122,26 +122,13 @@ public class QuizServiceTest {
               }
               
             }));
-    Assert.assertEquals(5,
-        (int) this.jdbcTemplate.query(
-            "SELECT question_id from QuizQuestions where quiz_id = ?",
-            new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
-
-              @Override
-              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-                // TODO Auto-generated method stub
-                while (rs.next()) {
-                  return rs.getInt("question_id");
-                }
-                return null;
-              }
-              
-            }));
+    Assert.assertEquals(2,
+        (int) this.jdbcTemplate.queryForObject(
+            "SELECT COUNT(question_id) from QuizQuestions where quiz_id = ?",
+            new Object[] {"ABCDE12345"}, int.class));
     QuizQuestion actual = this.quizService.fetchQuestion("ABCDE12345");
     Assert.assertNotNull(actual);
-    QuizQuestion expected = new QuizQuestion();
-    expected.setQuizId("ABCD12345");
-    Assert.assertNotEquals(expected.getQuestionId(), 5); // Because it has been asked before.
+    Assert.assertNotEquals(actual.getQuestionId().intValue(), 5); // Because it has been asked before.
     
     // Verify that the status has been updated.
     Assert.assertEquals(3,
@@ -176,6 +163,45 @@ public class QuizServiceTest {
   }
   
   @Test
+  public void testFetchQuestions_MissingQuizId() throws Exception {
+    Assert.assertEquals(0,
+        (int) this.jdbcTemplate.query(
+            "SELECT questions_asked from QuizStatus where quiz_id = ?",
+            new Object[] {"missing"}, new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                while (rs.next()) {
+                  return rs.getInt("questions_asked");
+                }
+                return 0;
+              }
+              
+            }));
+    Assert.assertNull(this.jdbcTemplate.query(
+            "SELECT question_id from QuizQuestions where quiz_id = ?",
+            new Object[] {"missing"}, new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                // TODO Auto-generated method stub
+                while (rs.next()) {
+                  return rs.getInt("question_id");
+                }
+                return null;
+              }
+              
+            }));
+    QuizQuestion actual = this.quizService.fetchQuestion("missing");
+    List<IError.Error> actualErrors = actual.getErrors();
+    List<IError.Error> expectedErrors = new ArrayList<>();
+    expectedErrors.add(
+        new IError.Error(404, "No quiz was found for quiz id missing"));
+    Assert.assertEquals(expectedErrors, actualErrors);
+  }
+  
+  @Test
   public void testQuestionsExhausted_EndToEnd() throws Exception {
     InitRegistration actual = this.quizService.generateQuizId("test1");
     Set<QuizQuestion> quizQuestions = new LinkedHashSet<>();
@@ -184,7 +210,7 @@ public class QuizServiceTest {
     }
     Assert.assertEquals(actual.getNumberOfQuestions(), quizQuestions.size());
     // Now send an additional request.
-    QuizQuestion shouldBeNull = this.quizService.fetchQuestion(actual.getQuizId());
+    QuizQuestion questionWithErrors = this.quizService.fetchQuestion(actual.getQuizId());
     Assert.assertEquals(0, (int) this.jdbcTemplate.query(
         "SELECT number_of_questions FROM Quiz WHERE quiz_id = ?",
         new Object[] {actual.getQuizId()}, new ResultSetExtractor<Integer>() {
@@ -198,7 +224,11 @@ public class QuizServiceTest {
           }
           
         }));
-    Assert.assertNull(shouldBeNull);
+    List<IError.Error> actualErrors = questionWithErrors.getErrors();
+    List<IError.Error> expectedErrors = new ArrayList<>();
+    expectedErrors.add(
+        new IError.Error(429, "The quiz " + actual.getQuizId() + "is no longer active."));
+    Assert.assertEquals(expectedErrors, actualErrors);
   }
   
   @Test
