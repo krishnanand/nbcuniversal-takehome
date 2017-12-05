@@ -63,7 +63,7 @@ public class FakeQuizService implements IQuizService {
     // TODO Auto-generated method stub
     Solution solution = new Solution();
     solution.setCorrectAnswer(true);
-    solution.setDescription("Is Earth round");
+    solution.setQuestion("Is Earth round");
     solution.setPlayerAnswer(true);
     return solution;
   }

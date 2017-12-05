@@ -196,15 +196,41 @@ public class QuizServiceTest {
     answer.setQuizId(question.getQuizId());
     answer.setQuestionId(question.getQuestionId());
     answer.setResponse(question.isAnswer());
-    answer.setQuestion(question.getQuestion());
     
     Solution actualSolution = this.quizService.checkAnswer(answer);
     Solution expectedSolution = new Solution();
     expectedSolution.setCorrectAnswer(question.isAnswer());
     expectedSolution.setPlayerAnswer(answer.isResponse());
     expectedSolution.setQuizId(actual.getQuizId());
-    expectedSolution.setDescription(answer.getQuestion());
+    String questionText = 
+        this.jdbcTemplate.query(
+            "SELECT question_text from Questions where question_id = ?",
+            new Object[] {question.getQuestionId()}, new ResultSetExtractor<String>() {
+
+              @Override
+              public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+                 while (rs.next()) { 
+                  return rs.getString("question_text");
+                 }
+                 return null;
+              }
+            });
+    expectedSolution.setQuestion(questionText);
     Assert.assertEquals(expectedSolution, actualSolution);
+  }
+  
+  @Test
+  public void checkAnswerForUnansweredQuestion() throws Exception {
+    Answer answer = new Answer();
+    answer.setQuizId("ABCDE1345");
+    answer.setQuestionId(4);
+    answer.setResponse(false);
+    Assert.assertNull(this.quizService.checkAnswer(answer));
+  }
+  
+  @Test
+  public void testGetScore() throws Exception {
+    Assert.assertNull(this.quizService.getScore("ABCDE12345"));
   }
 
 }

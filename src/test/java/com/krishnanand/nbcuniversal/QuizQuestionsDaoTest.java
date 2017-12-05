@@ -107,7 +107,7 @@ public class QuizQuestionsDaoTest {
     Assert.assertEquals(0,  (int) this.jdbcTemplate.queryForObject(
         "SELECT count(question_id) from QuizQuestions where quiz_id = ? AND question_id = ?",
         new Object[] {"ABCDE12345", 2}, int.class));
-    Assert.assertEquals(1, this.questionsDao.markQuestionsAsAsked("ABCDE12345", 2));
+    Assert.assertEquals(1, this.questionsDao.markQuestionAsAsked("ABCDE12345", 2));
     Assert.assertEquals(1,  (int) this.jdbcTemplate.queryForObject(
         "SELECT count(question_id) from QuizQuestions where quiz_id = ? AND question_id = ?",
         new Object[] {"ABCDE12345", 2}, int.class));
@@ -117,14 +117,34 @@ public class QuizQuestionsDaoTest {
   public void testCheckAnswer() throws Exception {
     Answer answer = new Answer();
     answer.setQuestionId(4);
-    answer.setQuestion("Is July 25 independence day of United States of America?");
     answer.setResponse(false);
     Solution actual = this.questionsDao.checkAnswer(answer);
     Solution expected = new Solution();
     expected.setCorrectAnswer(false);
-    expected.setDescription("Is July 25 independence day of United States of America?");
+    expected.setQuestion("Is July 25 independence day of United States of America?");
     expected.setPlayerAnswer(false);
     Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
+  public void testIsQuestionAnswered_Success() throws Exception {
+    Assert.assertTrue(this.questionsDao.isQuestionAnswered("ABCDE12345", 5));
+  }
+  
+  @Test
+  public void testIsQuestionAnswered_Failure() throws Exception {
+    Assert.assertFalse(this.questionsDao.isQuestionAnswered("ABCDE12345", 4));
+  }
+
+  @Test
+  public void testMarkQuestionAsAnswered() throws Exception {
+    Assert.assertEquals(0,  (int) this.jdbcTemplate.queryForObject(
+        "SELECT count(question_id) from AnsweredQuestions where quiz_id = ? AND question_id = ?",
+        new Object[] {"ABCDE12345", 4}, int.class));
+    Assert.assertEquals(1,  this.questionsDao.markQuestionAsAnswered("ABCDE12345", 4));
+    Assert.assertEquals(1,  (int) this.jdbcTemplate.queryForObject(
+        "SELECT count(question_id) from AnsweredQuestions where quiz_id = ? AND question_id = ?",
+        new Object[] {"ABCDE12345", 4}, int.class));
   }
   
   @Test
@@ -134,7 +154,6 @@ public class QuizQuestionsDaoTest {
   
   @Test
   public void testIsQuestionAsked_Failure() throws Exception {
-    Assert.assertFalse(this.questionsDao.isQuestionAsked("ABCDE12345", 4));
+    Assert.assertFalse(this.questionsDao.isQuestionAnswered("ABCDE12345", 4));
   }
-
 }

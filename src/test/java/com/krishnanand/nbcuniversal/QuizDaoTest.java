@@ -137,7 +137,6 @@ public class QuizDaoTest {
     expected.setQuizId("ABCDE12345");
     expected.setCorrectAnswer(true);
     expected.setPlayerAnswer(true);
-    expected.setDescription("Is earth round?");
     this.quizDao.updateScore(expected);
     Score expectedScore = new Score();
     expectedScore.setCorrectAnswers(1);
@@ -177,7 +176,7 @@ public class QuizDaoTest {
     expected.setQuizId("ABCDE12345");
     expected.setCorrectAnswer(true);
     expected.setPlayerAnswer(false);
-    expected.setDescription("Is earth round?");
+    expected.setQuestion("Is earth round?");
     this.quizDao.updateScore(expected);
     Score expectedScore = new Score();
     expectedScore.setCorrectAnswers(0);

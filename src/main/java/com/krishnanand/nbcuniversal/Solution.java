@@ -9,18 +9,18 @@ public class Solution {
   
   private String quizId;
   
-  private String description;
+  private String question;
   
   private boolean correctAnswer;
   
   private boolean playerAnswer;
 
-  public String getDescription() {
-    return description;
+  public String getQuestion() {
+    return question;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setQuestion(String description) {
+    this.question = description;
   }
 
   public String getQuizId() {
@@ -52,7 +52,7 @@ public class Solution {
     final int prime = 31;
     int result = 1;
     result = prime * result + (correctAnswer ? 1231 : 1237);
-    result = prime * result + ((description == null) ? 0 : description.hashCode());
+    result = prime * result + ((question == null) ? 0 : question.hashCode());
     result = prime * result + (playerAnswer ? 1231 : 1237);
     result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
     return result;
@@ -73,11 +73,11 @@ public class Solution {
     if (correctAnswer != other.correctAnswer) {
       return false;
     }
-    if (description == null) {
-      if (other.description != null) {
+    if (question == null) {
+      if (other.question != null) {
         return false;
       }
-    } else if (!description.equals(other.description)) {
+    } else if (!question.equals(other.question)) {
       return false;
     }
     if (playerAnswer != other.playerAnswer) {
@@ -99,7 +99,7 @@ public class Solution {
     builder.append("Solution [quizId=");
     builder.append(quizId);
     builder.append(", description=");
-    builder.append(description);
+    builder.append(question);
     builder.append(", correctAnswer=");
     builder.append(correctAnswer);
     builder.append(", playerAnswer=");

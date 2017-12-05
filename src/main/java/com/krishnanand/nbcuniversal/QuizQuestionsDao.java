@@ -98,7 +98,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
    * @param questionId question id for which the questions are to be asked
    */
   @Override
-  public int markQuestionsAsAsked(String quizId, int questionId) {
+  public int markQuestionAsAsked(String quizId, int questionId) {
     return this.jdbcTemplate.update(
         "INSERT INTO QuizQuestions(quiz_id, question_id) VALUES(?, ?)",
         new Object[] {quizId, questionId});
@@ -123,7 +123,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
               sol.setQuizId(answer.getQuizId());
               sol.setCorrectAnswer(rs.getBoolean("answer"));
               sol.setPlayerAnswer(answer.isResponse());
-              sol.setDescription(rs.getString("question_text"));
+              sol.setQuestion(rs.getString("question_text"));
               return sol;
             }
             return null;
@@ -135,11 +135,33 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
   }
 
   /**
-   * Checks if the question has been asked.
+   * Checks if the question has been answered.
    * 
    * @param quizId unique quiz id associated with the question
    * @param questionId unique question id to be checked
    * @return {@code true} if the question was asked; {@code false} otherwise
+   */
+  @Override
+  public boolean isQuestionAnswered(String quizId, int questionId) {
+    StringBuilder sb = new StringBuilder("SELECT count(question_id) FROM AnsweredQuestions ");
+    sb.append("WHERE quiz_id = ? AND question_id = ?");
+    int count = this.jdbcTemplate.queryForObject(
+        sb.toString(), new Object[] {quizId, questionId}, int.class); 
+    return count == 1;
+  }
+
+  @Override
+  public int markQuestionAsAnswered(String quizId, int questionId) {
+     return this.jdbcTemplate.update(
+        "INSERT INTO AnsweredQuestions(quiz_id, question_id) VALUES(?, ?)",
+        new Object[] {quizId, questionId});
+  }
+
+  /**
+   * Checks if the question has been asked
+   * 
+   * @param quizId quiz id
+   * @param questionId question id to be queried
    */
   @Override
   public boolean isQuestionAsked(String quizId, int questionId) {

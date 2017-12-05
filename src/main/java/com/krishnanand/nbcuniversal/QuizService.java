@@ -47,7 +47,7 @@ public class QuizService implements IQuizService {
       return null;
     }
     this.questionsDao.updateQuizStatus(quizId);
-    this.questionsDao.markQuestionsAsAsked(quizId, question.getQuestionId());
+    this.questionsDao.markQuestionAsAsked(quizId, question.getQuestionId());
     return question;
   }
 
@@ -74,10 +74,13 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Solution checkAnswer(Answer answer) {
-    
-    Solution solution = this.questionsDao.checkAnswer(answer);
-    this.quizDao.updateScore(solution);
-    return solution;
+    if (this.questionsDao.isQuestionAsked(answer.getQuizId(), answer.getQuestionId())) {
+      Solution solution = this.questionsDao.checkAnswer(answer);
+      this.questionsDao.markQuestionAsAnswered(answer.getQuizId(), answer.getQuestionId());
+      this.quizDao.updateScore(solution);
+      return solution;
+    }
+    return null;
   }
 
 
@@ -85,6 +88,7 @@ public class QuizService implements IQuizService {
    * Returns the score.
    */
   @Override
+  @Transactional
   public Score getScore(String quizId) {
     return this.quizDao.getCurrentScore(quizId);
   }

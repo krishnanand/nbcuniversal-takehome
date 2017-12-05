@@ -30,11 +30,10 @@ public class QuizController {
    * @return registration information
    */
   @RequestMapping(value="/quiz", method=RequestMethod.POST)
-  ResponseEntity<InitRegistration> initialiseQuiz() {
+  public ResponseEntity<InitRegistration> initialiseQuiz() {
     InitRegistration registration = this.quizService.generateQuizId("test");
     return new ResponseEntity<InitRegistration>(registration, HttpStatus.CREATED);
   }
-  
 
   /**
    * Fetches the questions to be answered.
@@ -55,6 +54,10 @@ public class QuizController {
   public ResponseEntity<Solution> answerQuestion(String quizId,
       @RequestBody final Answer answer) {
     Solution solution = this.quizService.checkAnswer(answer);
+    if (solution == null) {
+      // The question was not answered.
+      return new ResponseEntity<Solution>(HttpStatus.FORBIDDEN);
+    }
     return new ResponseEntity<>(solution, HttpStatus.OK);
   }
   

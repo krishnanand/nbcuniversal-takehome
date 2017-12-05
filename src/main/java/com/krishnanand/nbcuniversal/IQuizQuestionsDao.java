@@ -27,12 +27,20 @@ public interface IQuizQuestionsDao {
   int updateQuizStatus(String quizId);
   
   /**
+   * Checks if the question has been asked
+   * 
+   * @param quizId quiz id
+   * @param questionId question id to be queried
+   */
+  boolean isQuestionAsked(String quizId, int questionId);
+  
+  /**
    * Adds an entry to {@code QuizQuestions} table.
    * 
    * @param quizId quiz id
    * @param questionId question id to be inserted
    */
-  int markQuestionsAsAsked(String quizId, int questionId);
+  int markQuestionAsAsked(String quizId, int questionId);
   
   /**
    * Checks answer against the system.
@@ -49,6 +57,15 @@ public interface IQuizQuestionsDao {
    * @param questionId unique question id to be checked
    * @return {@code true} if the question was asked; {@code false} otherwise
    */
-  boolean isQuestionAsked(String quizId, int questionId);
+  boolean isQuestionAnswered(String quizId, int questionId);
+  
+  /**
+   * Marks question as answered
+   * 
+   * @param quizId unique quiz id associated with the question
+   * @param questionId unique question id to be checked
+   * @return number of rows updated
+   */
+  int markQuestionAsAnswered(String quizId, int question_id);
 
 }
