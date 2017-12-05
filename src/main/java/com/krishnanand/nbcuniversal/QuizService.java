@@ -89,14 +89,20 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Solution checkAnswer(String quizId, Answer answer) {
-    if (this.questionsDao.isQuestionAsked(quizId, answer.getQuestionId()) &&
-        !this.questionsDao.isQuestionAnswered(quizId, answer.getQuestionId())) {
-      Solution solution = this.questionsDao.checkAnswer(quizId, answer);
-      this.questionsDao.markQuestionAsAnswered(quizId, answer.getQuestionId());
-      this.quizDao.updateScore(solution);
-      return solution;
+    if (!this.questionsDao.isQuestionAsked(quizId, answer.getQuestionId())) {
+      Solution error = new Solution();
+      error.addError(400, "No such question was asked.");
+      return error;
     }
-    return null;
+    if (this.questionsDao.isQuestionAnswered(quizId, answer.getQuestionId())) {
+      Solution error = new Solution();
+      error.addError(400, "Question has already been answered.");
+      return error;
+    }
+    Solution solution = this.questionsDao.checkAnswer(quizId, answer);
+    this.questionsDao.markQuestionAsAnswered(quizId, answer.getQuestionId());
+    this.quizDao.updateScore(solution);
+    return solution;
   }
 
 

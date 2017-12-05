@@ -107,6 +107,30 @@ public class QuizControllerTest {
   }
   
   @Test
+  public void testInvalidQuestion_QuestionDoesNotExist() throws Exception {
+    Answer answer = new Answer();
+    answer.setQuestionId(40);
+    answer.setResponse(false);
+    ResponseEntity<Solution> actualSolution =
+        this.quizController.answerQuestion("ABCDE12345", answer);
+    Solution expected = new Solution();
+    expected.addError(400, "No such question was asked.");
+    Assert.assertEquals(expected, actualSolution.getBody());
+  }
+  
+  @Test
+  public void testInvalidQuestion_QuestionHasBeenAsked() throws Exception {
+    Answer answer = new Answer();
+    answer.setQuestionId(5);
+    answer.setResponse(false);
+    ResponseEntity<Solution> actualSolution =
+        this.quizController.answerQuestion("ABCDE12345", answer);
+    Solution expected = new Solution();
+    expected.addError(400, "Question has already been answered.");
+    Assert.assertEquals(expected, actualSolution.getBody());
+  }
+  
+  @Test
   public void testGetScore() throws Exception {
     ResponseEntity<InitRegistration> responseEntity =
         this.quizController.initialiseQuiz();

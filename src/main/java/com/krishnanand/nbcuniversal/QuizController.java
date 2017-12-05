@@ -56,7 +56,7 @@ public class QuizController {
     Solution solution = this.quizService.checkAnswer(quizId, answer);
     if (solution == null) {
       // The question was not answered.
-      return new ResponseEntity<Solution>(HttpStatus.FORBIDDEN);
+      return new ResponseEntity<Solution>(HttpStatus.BAD_REQUEST);
     }
     return new ResponseEntity<>(solution, HttpStatus.OK);
   }

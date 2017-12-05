@@ -1,13 +1,19 @@
 package com.krishnanand.nbcuniversal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
- * Represents the solution to the answer.
+ * An instance of this class represents a system generated solution for a single question.
  * 
  * @author krishnanand (Kartik Krishnanand)
  */
-public class Solution {
+@JsonInclude(Include.NON_NULL)
+public class Solution implements IError {
   
   @JsonIgnore
   private String quizId;
@@ -49,14 +55,50 @@ public class Solution {
   public void setPlayerAnswer(boolean playerAnswer) {
     this.playerAnswer = playerAnswer;
   }
+  
+  @JsonInclude(Include.NON_EMPTY)
+  private List<Error> errors;
+
+  @Override
+  public List<Error> getErrors() {
+    // TODO Auto-generated method stub
+    return this.errors;
+  }
+  
+  public Solution() {
+    this.errors = new ArrayList<>();
+  }
+
+  @Override
+  public void addError(int code, String message) {
+    this.errors.add(new Error(code, message));
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Solution [quizId=");
+    builder.append(quizId);
+    builder.append(", question=");
+    builder.append(question);
+    builder.append(", correctAnswer=");
+    builder.append(correctAnswer);
+    builder.append(", playerAnswer=");
+    builder.append(playerAnswer);
+    builder.append(", errors=");
+    builder.append(errors);
+    builder.append("]");
+    return builder.toString();
+  }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + (correctAnswer ? 1231 : 1237);
-    result = prime * result + ((question == null) ? 0 : question.hashCode());
+    result = prime * result + ((errors == null) ? 0 : errors.hashCode());
     result = prime * result + (playerAnswer ? 1231 : 1237);
+    result = prime * result + ((question == null) ? 0 : question.hashCode());
     result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
     return result;
   }
@@ -76,14 +118,21 @@ public class Solution {
     if (correctAnswer != other.correctAnswer) {
       return false;
     }
+    if (errors == null) {
+      if (other.errors != null) {
+        return false;
+      }
+    } else if (!errors.equals(other.errors)) {
+      return false;
+    }
+    if (playerAnswer != other.playerAnswer) {
+      return false;
+    }
     if (question == null) {
       if (other.question != null) {
         return false;
       }
     } else if (!question.equals(other.question)) {
-      return false;
-    }
-    if (playerAnswer != other.playerAnswer) {
       return false;
     }
     if (quizId == null) {
@@ -94,21 +143,6 @@ public class Solution {
       return false;
     }
     return true;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Solution [quizId=");
-    builder.append(quizId);
-    builder.append(", description=");
-    builder.append(question);
-    builder.append(", correctAnswer=");
-    builder.append(correctAnswer);
-    builder.append(", playerAnswer=");
-    builder.append(playerAnswer);
-    builder.append("]");
-    return builder.toString();
   }
 
 }

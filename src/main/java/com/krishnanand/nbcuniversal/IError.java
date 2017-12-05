@@ -72,7 +72,17 @@ public interface IError {
     }
   }
   
+  /**
+   * Returns a list of errors.
+   * @return
+   */
   List<Error> getErrors();
   
-
+  /**
+   * Adds error the list of errors.
+   * 
+   * @param code error code
+   * @param message error message
+   */
+  void addError(int code,  String message);
 }

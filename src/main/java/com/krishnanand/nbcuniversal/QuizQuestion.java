@@ -36,8 +36,9 @@ public class QuizQuestion implements IError {
     this.errors = new ArrayList<>();
   }
   
+  @Override
   public void addError(int code, String message) {
-    this.errors.add(new IError.Error(code, message));
+    this.errors.add(new Error(code, message));
   }
 
   public void setQuizId(String quizId) {
@@ -73,9 +74,6 @@ public class QuizQuestion implements IError {
     return errors;
   }
 
-  public void setErrors(List<IError.Error> errors) {
-    this.errors = errors;
-  }
 
   @Override
   public String toString() {

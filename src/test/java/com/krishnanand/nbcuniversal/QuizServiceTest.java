@@ -265,9 +265,12 @@ public class QuizServiceTest {
   @Test
   public void checkAnswerForQuestionNotAsked() throws Exception {
     Answer answer = new Answer();
-    answer.setQuestionId(3);
+    answer.setQuestionId(15);
     answer.setResponse(false);
-    Assert.assertNull(this.quizService.checkAnswer("ABCDE12345", answer));
+    Solution actual = this.quizService.checkAnswer("ABCDE12345", answer);
+    Solution expected = new Solution();
+    expected.addError(400, "No such question was asked.");
+    Assert.assertEquals(expected, actual);
   }
   
   @Test
@@ -275,7 +278,10 @@ public class QuizServiceTest {
     Answer answer = new Answer();
     answer.setQuestionId(5);
     answer.setResponse(false);
-    Assert.assertNull(this.quizService.checkAnswer("ABCDE12345", answer));
+    Solution actual = this.quizService.checkAnswer("ABCDE12345", answer);
+    Solution expected = new Solution();
+    expected.addError(400, "Question has already been answered.");
+    Assert.assertEquals(expected, actual);
   }
   
   @Test
