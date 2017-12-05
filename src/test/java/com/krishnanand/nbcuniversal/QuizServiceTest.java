@@ -193,11 +193,10 @@ public class QuizServiceTest {
     InitRegistration actual = this.quizService.generateQuizId("test1");
     QuizQuestion question = this.quizService.fetchQuestion(actual.getQuizId());
     Answer answer = new Answer();
-    answer.setQuizId(question.getQuizId());
     answer.setQuestionId(question.getQuestionId());
     answer.setResponse(question.isAnswer());
     
-    Solution actualSolution = this.quizService.checkAnswer(answer);
+    Solution actualSolution = this.quizService.checkAnswer(question.getQuizId(), answer);
     Solution expectedSolution = new Solution();
     expectedSolution.setCorrectAnswer(question.isAnswer());
     expectedSolution.setPlayerAnswer(answer.isResponse());
@@ -222,10 +221,9 @@ public class QuizServiceTest {
   @Test
   public void checkAnswerForUnansweredQuestion() throws Exception {
     Answer answer = new Answer();
-    answer.setQuizId("ABCDE1345");
     answer.setQuestionId(4);
     answer.setResponse(false);
-    Assert.assertNull(this.quizService.checkAnswer(answer));
+    Assert.assertNull(this.quizService.checkAnswer("ABCDE12345", answer));
   }
   
   @Test

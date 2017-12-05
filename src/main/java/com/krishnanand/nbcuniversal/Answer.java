@@ -7,19 +7,9 @@ package com.krishnanand.nbcuniversal;
  */
 public class Answer {
   
-  private String quizId;
-  
   private int questionId;
   
   private boolean response;
-
-  public String getQuizId() {
-    return quizId;
-  }
-
-  public void setQuizId(String quizId) {
-    this.quizId = quizId;
-  }
 
   public int getQuestionId() {
     return questionId;
@@ -42,7 +32,6 @@ public class Answer {
     final int prime = 31;
     int result = 1;
     result = prime * result + questionId;
-    result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
     result = prime * result + (response ? 1231 : 1237);
     return result;
   }
@@ -62,13 +51,6 @@ public class Answer {
     if (questionId != other.questionId) {
       return false;
     }
-    if (quizId == null) {
-      if (other.quizId != null) {
-        return false;
-      }
-    } else if (!quizId.equals(other.quizId)) {
-      return false;
-    }
     if (response != other.response) {
       return false;
     }
@@ -78,8 +60,7 @@ public class Answer {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("Answer [quizId=");
-    builder.append(quizId);
+    builder.append("Answer [");
     builder.append(", questionId=");
     builder.append(questionId);
     builder.append(", response=");

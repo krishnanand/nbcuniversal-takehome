@@ -46,9 +46,9 @@ public interface IQuizQuestionsDao {
    * Checks answer against the system.
    * 
    * @param answer answer
-   * @return
+   * @return solution to the question
    */
-  Solution checkAnswer(Answer answer);
+  Solution checkAnswer(String quizId, Answer answer);
   
   /**
    * Checks if the question has been asked.

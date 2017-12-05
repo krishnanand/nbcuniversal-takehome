@@ -59,12 +59,13 @@ public class FakeQuizService implements IQuizService {
    * @see com.krishnanand.nbcuniversal.IQuizService#checkAnswer(com.krishnanand.nbcuniversal.Answer)
    */
   @Override
-  public Solution checkAnswer(Answer answer) {
+  public Solution checkAnswer(String quizId, Answer answer) {
     // TODO Auto-generated method stub
     Solution solution = new Solution();
     solution.setCorrectAnswer(true);
     solution.setQuestion("Is Earth round");
     solution.setPlayerAnswer(true);
+    solution.setQuizId(quizId);
     return solution;
   }
 

@@ -111,7 +111,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
    * @return solution
    */
   @Override
-  public Solution checkAnswer(Answer answer) {
+  public Solution checkAnswer(String quizId, Answer answer) {
     Solution solution = this.jdbcTemplate.query(
         "SELECT question_id, question_text, answer FROM Questions where question_id = ?",
         new Object[] {answer.getQuestionId()}, new ResultSetExtractor<Solution>() {
@@ -120,7 +120,7 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
           public Solution extractData(ResultSet rs) throws SQLException, DataAccessException {
             while (rs.next()) {
               Solution sol = new Solution();
-              sol.setQuizId(answer.getQuizId());
+              sol.setQuizId(quizId);
               sol.setCorrectAnswer(rs.getBoolean("answer"));
               sol.setPlayerAnswer(answer.isResponse());
               sol.setQuestion(rs.getString("question_text"));

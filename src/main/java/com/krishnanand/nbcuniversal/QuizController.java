@@ -53,7 +53,7 @@ public class QuizController {
   @RequestMapping(value="/quiz/{quizId}/questions", method=RequestMethod.POST)
   public ResponseEntity<Solution> answerQuestion(String quizId,
       @RequestBody final Answer answer) {
-    Solution solution = this.quizService.checkAnswer(answer);
+    Solution solution = this.quizService.checkAnswer(quizId, answer);
     if (solution == null) {
       // The question was not answered.
       return new ResponseEntity<Solution>(HttpStatus.FORBIDDEN);

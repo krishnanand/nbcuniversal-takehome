@@ -118,8 +118,9 @@ public class QuizQuestionsDaoTest {
     Answer answer = new Answer();
     answer.setQuestionId(4);
     answer.setResponse(false);
-    Solution actual = this.questionsDao.checkAnswer(answer);
+    Solution actual = this.questionsDao.checkAnswer("quizId", answer);
     Solution expected = new Solution();
+    expected.setQuizId("quizId");
     expected.setCorrectAnswer(false);
     expected.setQuestion("Is July 25 independence day of United States of America?");
     expected.setPlayerAnswer(false);

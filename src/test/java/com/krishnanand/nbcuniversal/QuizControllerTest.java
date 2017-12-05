@@ -79,7 +79,6 @@ public class QuizControllerTest {
   @Test
   public void testQuestionInCorrectly() throws Exception {
     Answer answer = new Answer();
-    answer.setQuizId("ABCDE12345");
     answer.setQuestionId(4);
     answer.setResponse(false);
     ResponseEntity<Solution> actualSolution =
@@ -90,7 +89,6 @@ public class QuizControllerTest {
   @Test
   public void testQuestionCorrectly() throws Exception {
     Answer answer = new Answer();
-    answer.setQuizId("ABCDE12345");
     answer.setQuestionId(5);
     answer.setResponse(true);
     this.quizController.answerQuestion("ABCDE12345", answer);
