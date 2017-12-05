@@ -56,9 +56,9 @@ The example of a successful response is given below
 }
 ````
 
-The error responses can be of two types. All error responses have the following endpoint.
+In case of an error, a different kind of payload is returned which describes any error conditions. 
 
-The error response for this  defined below
+The error response is defined as follows.
 
 | Name | Type | Description |
 | :---         |     :---      | :--- |
@@ -98,7 +98,7 @@ The sample response is given below.
 
 ### POST /nbcuniversal/quiz/{quizId}/questions ###
 
-Sends a response to a quiz question to the backend. The request body payload is given below
+Sends a response to a quiz question to the backend. The request body payload is defined below.
 
 | Name | Type | Description |
 | :---         |     :---      | :--- |
@@ -113,8 +113,6 @@ The sample request is given below
    "response":false
 }
 ````
-
-
 
 The sample response format is given below
 
@@ -135,6 +133,93 @@ The sample response is given below
 }
 ````
 
+In case of an error, a different kind of payload is returned which describes any error conditions. 
+
+The error response is defined as follows.
+
+| Name | Type | Description |
+| :---         |     :---      | :--- |
+| errors  | array   | array of errors |
+| code   | integer    | Http status code  |
+| message | string | user friendly error message|
 
 
+1) #### An invalid quiz id ####
 
+In this case, 400 error is returned. The sample response is given below
+
+````
+{  
+   "errors":[  
+      {  
+         "code":404,
+         "message":"No quiz was found for quiz id <Invalid Quiz ID>"
+      }
+   ]
+}
+````
+
+2) #### The number of requested questions exceeds maximum permissible assigned questions. ####
+
+The sample response is given below.
+
+````
+{  
+   "errors":[  
+      {  
+         "code":429,
+         "message":"There are no questions to be asked for quiz id <Generated Quiz ID>"
+      }
+   ]
+}
+````
+
+3) #### The quiz id does not exist in the system. ####
+
+The sample response is given below
+
+````
+{  
+   "errors":[  
+      {  
+         "code":400,
+         "message":"No quiz was found for quiz id test"
+      }
+   ]
+}
+````
+
+### GET /nbcuniversal/quiz/{quizId}/score ###
+
+This endpoint returns the score of the contestant at any given time. The response is defined as follows:
+
+ Name | Type | Description |
+| :---         |     :---      | :--- |
+| incorrectAnswers  | integer   |number of incorrect answers given|
+| correctAnswers   | integer    | number of correct answers given|
+| score    | integer    | player's score; it is equal to the value of correct answers.|
+
+The sample response is given below.
+
+````
+{  
+   "incorrectAnswers":1,
+   "correctAnswers":2,
+   "score":2
+}
+````
+
+The error conditions are described below
+
+#### An invalid quiz id ####
+
+````
+{  
+   "errors":[  
+      {  
+         "code":400,
+         "message":"No quiz was found for quiz id test"
+      }
+   ]
+}
+````
