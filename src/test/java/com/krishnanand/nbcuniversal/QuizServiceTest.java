@@ -196,14 +196,14 @@ public class QuizServiceTest {
     answer.setQuizId(question.getQuizId());
     answer.setQuestionId(question.getQuestionId());
     answer.setResponse(question.isAnswer());
-    answer.setDescription(question.getQuestion());
+    answer.setQuestion(question.getQuestion());
     
     Solution actualSolution = this.quizService.checkAnswer(answer);
     Solution expectedSolution = new Solution();
     expectedSolution.setCorrectAnswer(question.isAnswer());
     expectedSolution.setPlayerAnswer(answer.isResponse());
     expectedSolution.setQuizId(actual.getQuizId());
-    expectedSolution.setDescription(answer.getDescription());
+    expectedSolution.setDescription(answer.getQuestion());
     Assert.assertEquals(expectedSolution, actualSolution);
   }
 

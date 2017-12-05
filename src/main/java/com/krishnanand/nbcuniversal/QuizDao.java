@@ -115,7 +115,7 @@ public class QuizDao implements IQuizDao {
   public QuizStatus getCurrentQuizStatus(String quizId) {
     StringBuilder sb = new StringBuilder();
     sb.append("SELECT q.quiz_id, q.number_of_questions, qs.questions_asked FROM Quiz q  ");
-    sb.append(" JOIN QuizStatus qs on q.quiz_id = qs.quiz_id WHERE q.quiz_id=?");
+    sb.append(" JOIN QuizStatus qs on q.quiz_id = qs.quiz_id WHERE q.quiz_id= ?");
     QuizStatus status = this.jdbcTemplate.query(sb.toString(), new Object[] {quizId},
         new ResultSetExtractor<QuizStatus>() {
 
@@ -154,7 +154,7 @@ public class QuizDao implements IQuizDao {
    * the {@code incorrect_answers} if the quiz solution is not correct.
    * 
    * @param solution value encapsulating the solution
-   * @return score
+   * @return score number of scores updated
    */ 
   @Override
   public int updateScore(final Solution solution) {

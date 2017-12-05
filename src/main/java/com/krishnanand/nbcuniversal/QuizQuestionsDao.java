@@ -99,7 +99,6 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
    */
   @Override
   public int markQuestionsAsAsked(String quizId, int questionId) {
-    // TODO Auto-generated method stub
     return this.jdbcTemplate.update(
         "INSERT INTO QuizQuestions(quiz_id, question_id) VALUES(?, ?)",
         new Object[] {quizId, questionId});
@@ -133,5 +132,21 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
         });
     
     return solution;
+  }
+
+  /**
+   * Checks if the question has been asked.
+   * 
+   * @param quizId unique quiz id associated with the question
+   * @param questionId unique question id to be checked
+   * @return {@code true} if the question was asked; {@code false} otherwise
+   */
+  @Override
+  public boolean isQuestionAsked(String quizId, int questionId) {
+    StringBuilder sb = new StringBuilder("SELECT count(question_id) FROM QuizQuestions ");
+    sb.append("WHERE quiz_id = ? AND question_id = ?");
+    int count = this.jdbcTemplate.queryForObject(
+        sb.toString(), new Object[] {quizId, questionId}, int.class); 
+    return count == 1;
   }
 }

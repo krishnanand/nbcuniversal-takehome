@@ -46,7 +46,7 @@ public class QuizController {
   public ResponseEntity<QuizQuestion> questions(@PathVariable String quizId) {
     QuizQuestion question = this.quizService.fetchQuestion(quizId);
     if (question == null) {
-      return new ResponseEntity<QuizQuestion>(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<QuizQuestion>(HttpStatus.TOO_MANY_REQUESTS);
     }
     return new ResponseEntity<QuizQuestion>(question, HttpStatus.OK);
   }

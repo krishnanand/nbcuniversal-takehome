@@ -43,5 +43,4 @@ public interface IQuizDao {
    * Fetches the current score for a quiz id.
    */
   Score getCurrentScore(String quizId);
-
 }

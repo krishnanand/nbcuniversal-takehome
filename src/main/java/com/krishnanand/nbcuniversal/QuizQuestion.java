@@ -16,7 +16,6 @@ public class QuizQuestion {
   
   private String quizId;
   
-  @JsonIgnore
   private int questionId;
   
   private String question;

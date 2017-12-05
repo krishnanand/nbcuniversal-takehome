@@ -38,7 +38,7 @@ public class QuizService implements IQuizService {
   @Transactional
   public QuizQuestion fetchQuestion(String quizId) {
     QuizStatus current = this.quizDao.getCurrentQuizStatus(quizId);
-    if (current.isQuizEnded()) {
+    if (current == null || current.isQuizEnded()) {
       return null;
     }
     //
@@ -65,14 +65,16 @@ public class QuizService implements IQuizService {
   /**
    * Checks the solution against the system.
    * 
-   * <p>In addition the implementation updates the score after
-   * every answer.
+   * <p>The implementation checks if the question has already been answered previously.
+   * If not, the implementation checks the contestant's answer, and updates the score.
+   * In addition the implementation updates the score after every answer.
    * 
    * @param answer answer object
    */
   @Override
   @Transactional
   public Solution checkAnswer(Answer answer) {
+    
     Solution solution = this.questionsDao.checkAnswer(answer);
     this.quizDao.updateScore(solution);
     return solution;

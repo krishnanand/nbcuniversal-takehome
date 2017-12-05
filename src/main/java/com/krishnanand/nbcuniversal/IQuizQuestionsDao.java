@@ -41,5 +41,14 @@ public interface IQuizQuestionsDao {
    * @return
    */
   Solution checkAnswer(Answer answer);
+  
+  /**
+   * Checks if the question has been asked.
+   * 
+   * @param quizId unique quiz id associated with the question
+   * @param questionId unique question id to be checked
+   * @return {@code true} if the question was asked; {@code false} otherwise
+   */
+  boolean isQuestionAsked(String quizId, int questionId);
 
 }

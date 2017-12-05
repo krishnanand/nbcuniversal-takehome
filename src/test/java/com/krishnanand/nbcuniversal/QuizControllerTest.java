@@ -123,13 +123,13 @@ public class QuizControllerTest {
     Answer answer = new Answer();
     answer.setQuizId(response.getQuizId());
     answer.setQuestionId(4);
-    answer.setDescription("Is July 25 independence day of United States of America?");
+    answer.setQuestion("Is July 25 independence day of United States of America?");
     answer.setResponse(false);
     ResponseEntity<Solution> actualSolution =
         this.quizController.answerQuestion(response.getQuizId(), answer);
     Solution expectedSolution = new Solution();
     expectedSolution.setQuizId(response.getQuizId());
-    expectedSolution.setDescription(answer.getDescription());
+    expectedSolution.setDescription(answer.getQuestion());
     expectedSolution.setCorrectAnswer(false);
     expectedSolution.setPlayerAnswer(answer.isResponse());
     Assert.assertEquals(expectedSolution, actualSolution.getBody());
@@ -143,14 +143,14 @@ public class QuizControllerTest {
     Answer answer = new Answer();
     answer.setQuizId(response.getQuizId());
     answer.setQuestionId(4);
-    answer.setDescription("Is July 25 independence day of United States of America?");
+    answer.setQuestion("Is July 25 independence day of United States of America?");
     answer.setResponse(true);
     this.quizController.answerQuestion(response.getQuizId(), answer);
     ResponseEntity<Solution> actualSolution =
         this.quizController.answerQuestion(response.getQuizId(), answer);
     Solution expectedSolution = new Solution();
     expectedSolution.setQuizId(response.getQuizId());
-    expectedSolution.setDescription(answer.getDescription());
+    expectedSolution.setDescription(answer.getQuestion());
     expectedSolution.setCorrectAnswer(false);
     expectedSolution.setPlayerAnswer(answer.isResponse());
     Assert.assertEquals(expectedSolution, actualSolution.getBody());

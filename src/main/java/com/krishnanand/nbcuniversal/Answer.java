@@ -11,8 +11,6 @@ public class Answer {
   
   private int questionId;
   
-  private String description;
-  
   private boolean response;
 
   public String getQuizId() {
@@ -31,14 +29,6 @@ public class Answer {
     this.questionId = questionId;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
   public boolean isResponse() {
     return response;
   }
@@ -51,7 +41,6 @@ public class Answer {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((description == null) ? 0 : description.hashCode());
     result = prime * result + questionId;
     result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
     result = prime * result + (response ? 1231 : 1237);
@@ -70,13 +59,6 @@ public class Answer {
       return false;
     }
     Answer other = (Answer) obj;
-    if (description == null) {
-      if (other.description != null) {
-        return false;
-      }
-    } else if (!description.equals(other.description)) {
-      return false;
-    }
     if (questionId != other.questionId) {
       return false;
     }
@@ -100,8 +82,6 @@ public class Answer {
     builder.append(quizId);
     builder.append(", questionId=");
     builder.append(questionId);
-    builder.append(", description=");
-    builder.append(description);
     builder.append(", response=");
     builder.append(response);
     builder.append("]");

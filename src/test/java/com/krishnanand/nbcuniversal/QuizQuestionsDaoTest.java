@@ -117,7 +117,7 @@ public class QuizQuestionsDaoTest {
   public void testCheckAnswer() throws Exception {
     Answer answer = new Answer();
     answer.setQuestionId(4);
-    answer.setDescription("Is July 25 independence day of United States of America?");
+    answer.setQuestion("Is July 25 independence day of United States of America?");
     answer.setResponse(false);
     Solution actual = this.questionsDao.checkAnswer(answer);
     Solution expected = new Solution();
@@ -125,6 +125,16 @@ public class QuizQuestionsDaoTest {
     expected.setDescription("Is July 25 independence day of United States of America?");
     expected.setPlayerAnswer(false);
     Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
+  public void testIsQuestionAsked_Success() throws Exception {
+    Assert.assertTrue(this.questionsDao.isQuestionAsked("ABCDE12345", 5));
+  }
+  
+  @Test
+  public void testIsQuestionAsked_Failure() throws Exception {
+    Assert.assertFalse(this.questionsDao.isQuestionAsked("ABCDE12345", 4));
   }
 
 }
