@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class QuizQuestion {
   
+  @JsonIgnore
   private String quizId;
   
   private int questionId;
