@@ -89,6 +89,12 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Solution checkAnswer(String quizId, Answer answer) {
+    QuizStatus quizStatus = this.quizDao.getCurrentQuizStatus(quizId);
+    if (quizStatus == null) {
+      Solution error = new Solution();
+      error.addError(400, "No quiz was found for quiz id " + quizId);
+      return error;
+    }
     if (!this.questionsDao.isQuestionAsked(quizId, answer.getQuestionId())) {
       Solution error = new Solution();
       error.addError(400, "No such question was asked.");

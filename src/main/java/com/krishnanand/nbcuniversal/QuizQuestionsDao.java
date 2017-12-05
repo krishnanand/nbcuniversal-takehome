@@ -107,8 +107,8 @@ public class QuizQuestionsDao implements IQuizQuestionsDao {
   /**
    * Checks answer against the system.
    * 
-   * @param answer answer
-   * @return solution
+   * @param answer value object encapsulating the user response
+   * @return solution value object encapsulating the solution
    */
   @Override
   public Solution checkAnswer(String quizId, Answer answer) {

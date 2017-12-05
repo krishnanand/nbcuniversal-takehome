@@ -263,6 +263,17 @@ public class QuizServiceTest {
   }
   
   @Test
+  public void checkAnswerForInValidQuizID() throws Exception {
+    Answer answer = new Answer();
+    answer.setQuestionId(15);
+    answer.setResponse(false);
+    Solution actual = this.quizService.checkAnswer("ABCD", answer);
+    Solution expected = new Solution();
+    expected.addError(400, "No quiz was found for quiz id ABCD");
+    Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
   public void checkAnswerForQuestionNotAsked() throws Exception {
     Answer answer = new Answer();
     answer.setQuestionId(15);
