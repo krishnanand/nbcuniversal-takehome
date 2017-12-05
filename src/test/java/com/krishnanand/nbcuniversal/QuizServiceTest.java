@@ -219,9 +219,17 @@ public class QuizServiceTest {
   }
   
   @Test
-  public void checkAnswerForUnansweredQuestion() throws Exception {
+  public void checkAnswerForQuestionNotAsked() throws Exception {
     Answer answer = new Answer();
     answer.setQuestionId(4);
+    answer.setResponse(false);
+    Assert.assertNull(this.quizService.checkAnswer("ABCDE12345", answer));
+  }
+  
+  @Test
+  public void checkAnswerForAskedQuestion() throws Exception {
+    Answer answer = new Answer();
+    answer.setQuestionId(5);
     answer.setResponse(false);
     Assert.assertNull(this.quizService.checkAnswer("ABCDE12345", answer));
   }

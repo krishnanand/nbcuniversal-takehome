@@ -74,7 +74,8 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Solution checkAnswer(String quizId, Answer answer) {
-    if (this.questionsDao.isQuestionAsked(quizId, answer.getQuestionId())) {
+    if (this.questionsDao.isQuestionAsked(quizId, answer.getQuestionId()) &&
+        !this.questionsDao.isQuestionAnswered(quizId, answer.getQuestionId())) {
       Solution solution = this.questionsDao.checkAnswer(quizId, answer);
       this.questionsDao.markQuestionAsAnswered(quizId, answer.getQuestionId());
       this.quizDao.updateScore(solution);
