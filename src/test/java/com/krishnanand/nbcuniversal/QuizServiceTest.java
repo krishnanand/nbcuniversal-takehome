@@ -69,7 +69,6 @@ public class QuizServiceTest {
             // TODO Auto-generated method stub
             while(rs.next()) {
               InitRegistration actual = new InitRegistration();
-              actual.setUsername(rs.getString("username"));
               actual.setQuizId(rs.getString("quiz_id"));
               actual.setNumberOfQuestions(rs.getInt("number_of_questions"));
               actual.setActive(actual.getNumberOfQuestions() > 0);
@@ -108,7 +107,7 @@ public class QuizServiceTest {
   
   @Test
   public void testFetchQuestions() throws Exception {
-    Assert.assertEquals(1,
+    Assert.assertEquals(2,
         (int) this.jdbcTemplate.query(
             "SELECT questions_asked from QuizStatus where quiz_id = ?",
             new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
@@ -145,7 +144,7 @@ public class QuizServiceTest {
     Assert.assertNotEquals(expected.getQuestionId(), 5); // Because it has been asked before.
     
     // Verify that the status has been updated.
-    Assert.assertEquals(2,
+    Assert.assertEquals(3,
         (int) this.jdbcTemplate.query(
             "SELECT questions_asked from QuizStatus where quiz_id = ?",
             new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
@@ -162,6 +161,7 @@ public class QuizServiceTest {
             }));
     List<Integer> askedQuestions = new ArrayList<>();
     askedQuestions.add(5);
+    askedQuestions.add(4);
     askedQuestions.add(actual.getQuestionId());
     Assert.assertEquals(askedQuestions,
         this.jdbcTemplate.query(
@@ -185,6 +185,19 @@ public class QuizServiceTest {
     Assert.assertEquals(actual.getNumberOfQuestions(), quizQuestions.size());
     // Now send an additional request.
     QuizQuestion shouldBeNull = this.quizService.fetchQuestion(actual.getQuizId());
+    Assert.assertEquals(0, (int) this.jdbcTemplate.query(
+        "SELECT number_of_questions FROM Quiz WHERE quiz_id = ?",
+        new Object[] {actual.getQuizId()}, new ResultSetExtractor<Integer>() {
+
+          @Override
+          public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+            while(rs.next()) {
+              return rs.getInt("number_of_questions");
+            }
+            return null;
+          }
+          
+        }));
     Assert.assertNull(shouldBeNull);
   }
   
@@ -221,7 +234,7 @@ public class QuizServiceTest {
   @Test
   public void checkAnswerForQuestionNotAsked() throws Exception {
     Answer answer = new Answer();
-    answer.setQuestionId(4);
+    answer.setQuestionId(3);
     answer.setResponse(false);
     Assert.assertNull(this.quizService.checkAnswer("ABCDE12345", answer));
   }
@@ -236,7 +249,11 @@ public class QuizServiceTest {
   
   @Test
   public void testGetScore() throws Exception {
-    Assert.assertNull(this.quizService.getScore("ABCDE12345"));
+    InitRegistration registration = this.quizService.generateQuizId("test");
+    Score actual = this.quizService.getScore(registration.getQuizId());
+    Score expected = new Score();
+    expected.setQuizId(registration.getQuizId());
+    Assert.assertEquals(expected, actual);
   }
 
 }

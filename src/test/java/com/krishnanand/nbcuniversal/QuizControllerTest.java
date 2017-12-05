@@ -80,26 +80,30 @@ public class QuizControllerTest {
   public void testQuestionInCorrectly() throws Exception {
     Answer answer = new Answer();
     answer.setQuestionId(4);
-    answer.setResponse(false);
+    answer.setResponse(true);
     ResponseEntity<Solution> actualSolution =
         this.quizController.answerQuestion("ABCDE12345", answer);
-    Assert.assertNull(actualSolution.getBody());
+    Solution expected = new Solution();
+    expected.setQuestion("Is July 25 independence day of United States of America?");
+    expected.setQuizId("ABCDE12345");
+    expected.setCorrectAnswer(false);
+    expected.setPlayerAnswer(true);
+    Assert.assertEquals(expected, actualSolution.getBody());
   }
   
   @Test
   public void testQuestionCorrectly() throws Exception {
     Answer answer = new Answer();
-    answer.setQuestionId(5);
-    answer.setResponse(true);
-    this.quizController.answerQuestion("ABCDE12345", answer);
+    answer.setQuestionId(4);
+    answer.setResponse(false);
     ResponseEntity<Solution> actualSolution =
         this.quizController.answerQuestion("ABCDE12345", answer);
-    Solution expectedSolution = new Solution();
-    expectedSolution.setQuizId("ABCDE12345");
-    expectedSolution.setQuestion("Does January have 31 days in a month?");
-    expectedSolution.setCorrectAnswer(true);
-    expectedSolution.setPlayerAnswer(answer.isResponse());
-    Assert.assertEquals(expectedSolution, actualSolution.getBody());
+    Solution expected = new Solution();
+    expected.setQuestion("Is July 25 independence day of United States of America?");
+    expected.setQuizId("ABCDE12345");
+    expected.setCorrectAnswer(false);
+    expected.setPlayerAnswer(false);
+    Assert.assertEquals(expected, actualSolution.getBody());
   }
   
   @Test
@@ -112,7 +116,6 @@ public class QuizControllerTest {
     expected.setQuizId(registration.getQuizId());
     expected.setCorrectAnswers(0);
     expected.setIncorrectAnswers(0);
-    expected.calculateScore();
     Assert.assertEquals(expected, actual);
   }
   

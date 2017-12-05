@@ -43,4 +43,12 @@ public interface IQuizDao {
    * Fetches the current score for a quiz id.
    */
   Score getCurrentScore(String quizId);
+  
+  /**
+   * Marks the quiz as completed.
+   * 
+   * @param quizId quiz id for which the quiz is to be marked completed
+   * @return {@code true} if the operation was successful; {@code false} otherwise
+   */
+  boolean markQuizAsCompleted(String quizId);
 }

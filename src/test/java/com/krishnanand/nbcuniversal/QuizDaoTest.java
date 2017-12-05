@@ -49,7 +49,6 @@ public class QuizDaoTest {
   @Test
   public void testInitRegistration() throws Exception {
     InitRegistration registration = this.quizDao.registerQuiz("test");
-    Assert.assertEquals("test", registration.getUsername());
     Assert.assertEquals(3, registration.getNumberOfQuestions());
     Assert.assertTrue(registration.isActive());
     InitRegistration expected = this.jdbcTemplate.query(
@@ -63,7 +62,6 @@ public class QuizDaoTest {
               InitRegistration initRegistration = new InitRegistration();
               initRegistration.setActive(true);
               initRegistration.setNumberOfQuestions(rs.getInt("number_of_questions"));
-              initRegistration.setUsername(rs.getString("username"));
               initRegistration.setQuizId(rs.getString("quiz_id"));
               return initRegistration;
             }
@@ -82,7 +80,6 @@ public class QuizDaoTest {
               score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
               score.setCorrectAnswers(rs.getInt("correct_answers"));
               score.setQuizId(registration.getQuizId());
-              score.calculateScore();
               return score;
             }
             return null;
@@ -99,7 +96,7 @@ public class QuizDaoTest {
   public void getCurrentQuizStatus() throws Exception {
     QuizStatus actual = this.quizDao.getCurrentQuizStatus("ABCDE12345");
     QuizStatus expected = new QuizStatus();
-    expected.setNumberOfAskedQuestions(1);
+    expected.setNumberOfAskedQuestions(2);
     expected.setNumberOfEligibleQuestions(3);
     expected.setQuizId("ABCDE12345");
     expected.setQuizEnded(false);
@@ -141,7 +138,6 @@ public class QuizDaoTest {
     Score expectedScore = new Score();
     expectedScore.setCorrectAnswers(1);
     expectedScore.setIncorrectAnswers(0);
-    expectedScore.calculateScore();
     expectedScore.setQuizId("ABCDE12345");
     Score actual = this.jdbcTemplate.query(
             "SELECT incorrect_answers, correct_answers FROM Score where quiz_id = ?",
@@ -154,7 +150,6 @@ public class QuizDaoTest {
                   score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
                   score.setCorrectAnswers(rs.getInt("correct_answers"));
                   score.setQuizId("ABCDE12345");
-                  score.calculateScore();
                   return score;
                 }
                 return null;
@@ -181,7 +176,6 @@ public class QuizDaoTest {
     Score expectedScore = new Score();
     expectedScore.setCorrectAnswers(0);
     expectedScore.setIncorrectAnswers(1);
-    expectedScore.calculateScore();
     expectedScore.setQuizId("ABCDE12345");
     Score actual = this.jdbcTemplate.query(
             "SELECT incorrect_answers, correct_answers FROM Score where quiz_id = ?",
@@ -194,7 +188,6 @@ public class QuizDaoTest {
                   score.setIncorrectAnswers(rs.getInt("incorrect_answers"));
                   score.setCorrectAnswers(rs.getInt("correct_answers"));
                   score.setQuizId("ABCDE12345");
-                  score.calculateScore();
                   return score;
                 }
                 return null;
@@ -203,5 +196,41 @@ public class QuizDaoTest {
             });
     Assert.assertEquals(expectedScore, actual);
   }
+  
+  @Test
+  public void testMarkQuizAsCompleted() throws Exception {
+    String query = "SELECT number_of_questions FROM Quiz WHERE quiz_id = ?";
+    Assert.assertEquals(
+        3,  
+       (int) this.jdbcTemplate.query(
+           query, new Object[] {"ABCDE12345"},
+           new ResultSetExtractor<Integer>() {
+
+          @Override
+          public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+            while (rs.next()) {
+              return rs.getInt("number_of_questions");
+            }
+            return null;
+          }
+        }));
+        this.quizDao.markQuizAsCompleted("ABCDE12345");
+        Assert.assertEquals(
+            0,  
+           (int) this.jdbcTemplate.query(
+               query, new Object[] {"ABCDE12345"},
+               new ResultSetExtractor<Integer>() {
+
+              @Override
+              public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                while (rs.next()) {
+                  return rs.getInt("number_of_questions");
+                }
+                return null;
+              }
+            }));
+    }
+    
+  
 
 }

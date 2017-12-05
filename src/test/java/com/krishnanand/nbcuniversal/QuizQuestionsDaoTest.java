@@ -47,7 +47,7 @@ public class QuizQuestionsDaoTest {
   public void testFetchUniqueQuestion_Success() throws Exception {
     QuizQuestion question = this.questionsDao.fetchUniqueQuizQuestion("ABCDE12345");
     Assert.assertNotNull(question);
-    this.assertCount(9, "ABCDE12345");
+    this.assertCount(8, "ABCDE12345");
   }
   
   private void assertCount(int expected, final String quizId) {
@@ -70,7 +70,7 @@ public class QuizQuestionsDaoTest {
   
   @Test
   public void testUpdateQuizStatus() throws Exception {
-    Assert.assertEquals(1,  (int) this.jdbcTemplate.query(
+    Assert.assertEquals(2,  (int) this.jdbcTemplate.query(
         "SELECT questions_asked from QuizStatus where quiz_id = ?",
         new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
 
@@ -86,7 +86,7 @@ public class QuizQuestionsDaoTest {
         }));
     int row = this.questionsDao.updateQuizStatus("ABCDE12345");
     Assert.assertEquals(row, 1);
-    Assert.assertEquals(2, (int) this.jdbcTemplate.query(
+    Assert.assertEquals(3, (int) this.jdbcTemplate.query(
         "SELECT questions_asked from QuizStatus where quiz_id = ?",
         new Object[] {"ABCDE12345"}, new ResultSetExtractor<Integer>() {
 

@@ -61,7 +61,7 @@ public class Answer {
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("Answer [");
-    builder.append(", questionId=");
+    builder.append("questionId=");
     builder.append(questionId);
     builder.append(", response=");
     builder.append(response);

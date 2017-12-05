@@ -81,7 +81,6 @@ public class QuizDao implements IQuizDao {
                   public InitRegistration extractData(ResultSet rs) throws SQLException, DataAccessException {
                     while (rs.next()) {
                       InitRegistration registration = new InitRegistration();
-                      registration.setUsername(username);
                       registration.setNumberOfQuestions(rs.getInt("number_of_questions"));
                       registration.setActive(registration.getNumberOfQuestions() > 0);
                       registration.setQuizId(rs.getString("quiz_id"));
@@ -126,7 +125,9 @@ public class QuizDao implements IQuizDao {
           qs.setNumberOfAskedQuestions(rs.getInt("questions_asked"));
           qs.setNumberOfEligibleQuestions(rs.getInt("number_of_questions"));
           qs.setQuizId(rs.getString("quiz_id"));
-          qs.setQuizEnded(qs.getNumberOfAskedQuestions() == qs.getNumberOfEligibleQuestions());
+          qs.setQuizEnded(
+              qs.getNumberOfAskedQuestions() == qs.getNumberOfEligibleQuestions() ||
+              qs.getNumberOfEligibleQuestions() == 0);
           return qs;
         }
         return null;
@@ -193,6 +194,20 @@ public class QuizDao implements IQuizDao {
           }
         });
     return score;
+  }
+
+
+  /**
+   * Marks the quiz as completed.
+   * 
+   * @param quizId Marks the quiz as completed
+   */
+  @Override
+  public boolean markQuizAsCompleted(String quizId) {
+    int count =
+        this.jdbcTemplate.update("UPDATE Quiz SET number_of_questions = 0 WHERE quiz_id = ?",
+            new Object[] {quizId});
+    return count == 1;
   }
 
 }

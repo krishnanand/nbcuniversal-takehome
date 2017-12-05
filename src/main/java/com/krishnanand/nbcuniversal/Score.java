@@ -37,15 +37,13 @@ public class Score {
 
   public void setCorrectAnswers(int correctAnswers) {
     this.correctAnswers = correctAnswers;
+    this.score = this.correctAnswers;
   }
 
   public int getScore() {
     return score;
   }
   
-  public void calculateScore() {
-    this.score = this.correctAnswers;
-  }
 
   @Override
   public int hashCode() {

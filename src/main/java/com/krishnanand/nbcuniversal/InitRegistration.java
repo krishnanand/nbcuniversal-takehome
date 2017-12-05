@@ -7,22 +7,13 @@ package com.krishnanand.nbcuniversal;
  * @author krishnanand (Kartik Krishnanand)
  */
 public class InitRegistration {
-  
-  private String username;
+ 
   
   private int numberOfQuestions;
   
   private String quizId;
   
   private boolean isActive;
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
 
   public int getNumberOfQuestions() {
     return numberOfQuestions;
@@ -51,9 +42,8 @@ public class InitRegistration {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("InitRegistration [username=");
-    builder.append(username);
-    builder.append(", numberOfQuestions=");
+    builder.append("InitRegistration [");
+    builder.append("numberOfQuestions=");
     builder.append(numberOfQuestions);
     builder.append(", quizId=");
     builder.append(quizId);
@@ -70,7 +60,6 @@ public class InitRegistration {
     result = prime * result + (isActive ? 1231 : 1237);
     result = prime * result + numberOfQuestions;
     result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
-    result = prime * result + ((username == null) ? 0 : username.hashCode());
     return result;
   }
 
@@ -97,13 +86,6 @@ public class InitRegistration {
         return false;
       }
     } else if (!quizId.equals(other.quizId)) {
-      return false;
-    }
-    if (username == null) {
-      if (other.username != null) {
-        return false;
-      }
-    } else if (!username.equals(other.username)) {
       return false;
     }
     return true;

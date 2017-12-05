@@ -39,6 +39,7 @@ public class QuizService implements IQuizService {
   public QuizQuestion fetchQuestion(String quizId) {
     QuizStatus current = this.quizDao.getCurrentQuizStatus(quizId);
     if (current == null || current.isQuizEnded()) {
+      this.quizDao.markQuizAsCompleted(quizId);
       return null;
     }
     //
@@ -91,9 +92,16 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Score getScore(String quizId) {
-    Score score = this.quizDao.getCurrentScore(quizId);
-    score.calculateScore();
-    return score;
+    return this.quizDao.getCurrentScore(quizId);
+  }
+
+  /**
+   * Marks the quiz as completed.
+   */
+  @Override
+  @Transactional
+  public void markQuizAsCompleted(String quizId) {
+    this.quizDao.markQuizAsCompleted(quizId);
   }
 
 }

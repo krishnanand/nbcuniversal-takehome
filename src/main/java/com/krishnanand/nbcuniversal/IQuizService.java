@@ -36,4 +36,11 @@ public interface IQuizService {
    * @return score
    */
   Score getScore(String quizId);
+  
+  /**
+   * Marks the quiz game as completed
+   * 
+   * @param quizId quiz is completed
+   */
+  void markQuizAsCompleted(String quizId);
 }
