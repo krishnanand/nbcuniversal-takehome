@@ -40,18 +40,19 @@ public class QuizService implements IQuizService {
     QuizStatus current = this.quizDao.getCurrentQuizStatus(quizId);
     if (current == null) {
       QuizQuestion qq = new QuizQuestion();
-      qq.addError(404, "No quiz was found for quiz id " + quizId);
+      qq.addError(400, "No quiz was found for quiz id " + quizId);
       return  qq;
+    }
+
+    if (current.isQuizEnded()) {
+      this.quizDao.markQuizAsCompleted(quizId);
+      QuizQuestion qq = new QuizQuestion();
+      qq.addError(400, "The quiz " + quizId + "is no longer active.");
+      return qq;
     }
     if (current.getNumberOfAskedQuestions() == current.getNumberOfEligibleQuestions()) {
       QuizQuestion qq = new QuizQuestion();
       qq.addError(429, "There are no questions to be asked for quiz id " + quizId);
-      return qq;
-    }
-    if (current.isQuizEnded()) {
-      this.quizDao.markQuizAsCompleted(quizId);
-      QuizQuestion qq = new QuizQuestion();
-      qq.addError(429, "The quiz " + quizId + "is no longer active.");
       return qq;
     }
     //
@@ -118,16 +119,12 @@ public class QuizService implements IQuizService {
   @Override
   @Transactional
   public Score getScore(String quizId) {
+    QuizStatus qs = this.quizDao.getCurrentQuizStatus(quizId);
+    if (qs == null) {
+      Score score = new Score();
+      score.addError(400, "No quiz was found for quiz id " + quizId);
+      return score;
+    }
     return this.quizDao.getCurrentScore(quizId);
   }
-
-  /**
-   * Marks the quiz as completed.
-   */
-  @Override
-  @Transactional
-  public void markQuizAsCompleted(String quizId) {
-    this.quizDao.markQuizAsCompleted(quizId);
-  }
-
 }

@@ -197,7 +197,7 @@ public class QuizServiceTest {
     List<IError.Error> actualErrors = actual.getErrors();
     List<IError.Error> expectedErrors = new ArrayList<>();
     expectedErrors.add(
-        new IError.Error(404, "No quiz was found for quiz id missing"));
+        new IError.Error(429, "No quiz was found for quiz id missing"));
     Assert.assertEquals(expectedErrors, actualErrors);
   }
   
@@ -301,7 +301,37 @@ public class QuizServiceTest {
     Score actual = this.quizService.getScore(registration.getQuizId());
     Score expected = new Score();
     expected.setQuizId(registration.getQuizId());
+    expected.setCorrectAnswers(0);
+    expected.setIncorrectAnswers(0);
+    expected.setCorrectAnswers(0);
     Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
+  public void testGetScore_MissingId() throws Exception {
+    Score expected = new Score();
+    expected.addError(400, "No quiz was found for quiz id missing");
+    Assert.assertEquals(expected, this.quizService.getScore("missing"));
+  }
+  
+  // Checks if the quiz is marked as having ended.
+  @Test
+  public void testEndQuiz() throws Exception {
+    InitRegistration registration = this.quizService.generateQuizId("test");
+    for (int i = 0; i < registration.getNumberOfQuestions(); i++) {
+      QuizQuestion qq = this.quizService.fetchQuestion(registration.getQuizId());
+      Answer answer = new Answer();
+      answer.setQuestionId(qq.getQuestionId());
+      answer.setResponse(false);
+      this.quizService.checkAnswer(registration.getQuizId(), answer);
+    }
+    QuizQuestion qq = this.quizService.fetchQuestion(registration.getQuizId());
+    Assert.assertEquals(1, qq.getErrors().size());
+    IError.Error error = qq.getErrors().get(0);
+    Assert.assertEquals(
+        new IError.Error(400, "The quiz " + registration.getQuizId() + "is no longer active."),
+        error);
+    
   }
 
 }

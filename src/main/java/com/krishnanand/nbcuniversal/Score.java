@@ -1,58 +1,83 @@
 package com.krishnanand.nbcuniversal;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * Encapsulates the score at any given time.
  * 
  * @author krishnanand (Kartik Krishnanand)
  */
-public class Score {
+@JsonInclude(Include.NON_NULL)
+public class Score implements IError {
   
+  @JsonIgnore
   private String quizId;
   
-  private int incorrectAnswers;
+  private Integer incorrectAnswers;
   
-  private int correctAnswers;
+  private Integer correctAnswers;
   
-  private int score;
+  private Integer score;
+  
+  @JsonInclude(Include.NON_EMPTY)
+  private List<Error> errors;
+  
+  public Score() {
+    this.errors = new ArrayList<>();
+  }
 
   public String getQuizId() {
     return quizId;
   }
 
+  public Integer getIncorrectAnswers() {
+    return incorrectAnswers;
+  }
+
+  public void setIncorrectAnswers(Integer incorrectAnswers) {
+    this.incorrectAnswers = incorrectAnswers;
+  }
+
+  public Integer getCorrectAnswers() {
+    return correctAnswers;
+  }
+
+  public void setCorrectAnswers(Integer correctAnswers) {
+    this.correctAnswers = correctAnswers;
+    this.score = correctAnswers;
+  }
   public void setQuizId(String quizId) {
     this.quizId = quizId;
   }
 
-  public int getIncorrectAnswers() {
-    return incorrectAnswers;
+  public void setErrors(List<Error> errors) {
+    this.errors = errors;
   }
 
-  public void setIncorrectAnswers(int incorrectAnswers) {
-    this.incorrectAnswers = incorrectAnswers;
+  @Override
+  public List<Error> getErrors() {
+    return this.errors;
   }
 
-  public int getCorrectAnswers() {
-    return correctAnswers;
+  @Override
+  public void addError(int code, String message) {
+    this.errors.add(new Error(code, message));
   }
-
-  public void setCorrectAnswers(int correctAnswers) {
-    this.correctAnswers = correctAnswers;
-    this.score = this.correctAnswers;
-  }
-
-  public int getScore() {
-    return score;
-  }
-  
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + correctAnswers;
-    result = prime * result + incorrectAnswers;
+    result = prime * result + ((correctAnswers == null) ? 0 : correctAnswers.hashCode());
+    result = prime * result + ((errors == null) ? 0 : errors.hashCode());
+    result = prime * result + ((incorrectAnswers == null) ? 0 : incorrectAnswers.hashCode());
     result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
-    result = prime * result + score;
+    result = prime * result + ((score == null) ? 0 : score.hashCode());
     return result;
   }
 
@@ -68,10 +93,25 @@ public class Score {
       return false;
     }
     Score other = (Score) obj;
-    if (correctAnswers != other.correctAnswers) {
+    if (correctAnswers == null) {
+      if (other.correctAnswers != null) {
+        return false;
+      }
+    } else if (!correctAnswers.equals(other.correctAnswers)) {
       return false;
     }
-    if (incorrectAnswers != other.incorrectAnswers) {
+    if (errors == null) {
+      if (other.errors != null) {
+        return false;
+      }
+    } else if (!errors.equals(other.errors)) {
+      return false;
+    }
+    if (incorrectAnswers == null) {
+      if (other.incorrectAnswers != null) {
+        return false;
+      }
+    } else if (!incorrectAnswers.equals(other.incorrectAnswers)) {
       return false;
     }
     if (quizId == null) {
@@ -81,7 +121,11 @@ public class Score {
     } else if (!quizId.equals(other.quizId)) {
       return false;
     }
-    if (score != other.score) {
+    if (score == null) {
+      if (other.score != null) {
+        return false;
+      }
+    } else if (!score.equals(other.score)) {
       return false;
     }
     return true;
@@ -98,10 +142,9 @@ public class Score {
     builder.append(correctAnswers);
     builder.append(", score=");
     builder.append(score);
+    builder.append(", errors=");
+    builder.append(errors);
     builder.append("]");
     return builder.toString();
   }
-  
-  
-
 }

@@ -43,8 +43,6 @@ public class QuizDao implements IQuizDao {
    */
   @Override
   public InitRegistration registerQuiz(final String username) {
-    // TODO Auto-generated method stub
-    
     StringBuilder insertQuery = new StringBuilder();
     insertQuery.append("INSERT INTO Quiz(quiz_id, username) ");
     insertQuery.append("VALUES(?, ?)");
@@ -97,7 +95,6 @@ public class QuizDao implements IQuizDao {
   }
   
   void initialiseScore(String quizId) {
-   // Initialise the score.
     this.jdbcTemplate.update(
         "INSERT INTO Score(quiz_id, correct_answers, incorrect_answers) VALUES(?, ?, ?)",
         new Object[] {quizId, 0, 0});
@@ -113,8 +110,9 @@ public class QuizDao implements IQuizDao {
   @Override
   public QuizStatus getCurrentQuizStatus(String quizId) {
     StringBuilder sb = new StringBuilder();
-    sb.append("SELECT q.quiz_id, q.number_of_questions, qs.questions_asked FROM Quiz q  ");
-    sb.append(" JOIN QuizStatus qs on q.quiz_id = qs.quiz_id WHERE q.quiz_id= ?");
+    sb.append("SELECT q.quiz_id, q.number_of_questions, qs.questions_asked, s.correct_answers, ");
+    sb.append("s.incorrect_answers FROM Quiz q  JOIN QuizStatus qs on q.quiz_id = qs.quiz_id ");
+    sb.append("JOIN Score s on s.quiz_id = q.quiz_id WHERE q.quiz_id= ?");
     QuizStatus status = this.jdbcTemplate.query(sb.toString(), new Object[] {quizId},
         new ResultSetExtractor<QuizStatus>() {
 
@@ -124,8 +122,10 @@ public class QuizDao implements IQuizDao {
           QuizStatus qs = new QuizStatus();
           qs.setNumberOfAskedQuestions(rs.getInt("questions_asked"));
           qs.setNumberOfEligibleQuestions(rs.getInt("number_of_questions"));
+          qs.setNumberOfAnsweredQuestions(
+              rs.getInt("correct_answers") + rs.getInt("incorrect_answers"));
           qs.setQuizId(rs.getString("quiz_id"));
-          qs.setQuizEnded(qs.getNumberOfEligibleQuestions() == 0);
+          qs.setQuizEnded(qs.getNumberOfAnsweredQuestions() == qs.getNumberOfEligibleQuestions());
           return qs;
         }
         return null;
@@ -153,7 +153,7 @@ public class QuizDao implements IQuizDao {
    * the {@code incorrect_answers} if the quiz solution is not correct.
    * 
    * @param solution value encapsulating the solution
-   * @return score number of scores updated
+   * @return number of rows updated
    */ 
   @Override
   public int updateScore(final Solution solution) {
@@ -208,5 +208,4 @@ public class QuizDao implements IQuizDao {
             new Object[] {quizId});
     return count == 1;
   }
-
 }

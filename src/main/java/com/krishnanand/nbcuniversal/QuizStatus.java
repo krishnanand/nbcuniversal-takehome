@@ -13,6 +13,8 @@ public class QuizStatus {
   
   private long numberOfAskedQuestions;
   
+  private long numberOfAnsweredQuestions;
+  
   private boolean quizEnded;
 
   public String getQuizId() {
@@ -47,6 +49,14 @@ public class QuizStatus {
     this.quizEnded = quizEnded;
   }
 
+  public long getNumberOfAnsweredQuestions() {
+    return numberOfAnsweredQuestions;
+  }
+
+  public void setNumberOfAnsweredQuestions(long numberOfAnsweredQuestions) {
+    this.numberOfAnsweredQuestions = numberOfAnsweredQuestions;
+  }
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
@@ -56,6 +66,8 @@ public class QuizStatus {
     builder.append(numberOfEligibleQuestions);
     builder.append(", numberOfAskedQuestions=");
     builder.append(numberOfAskedQuestions);
+    builder.append(", numberOfAnsweredQuestions=");
+    builder.append(numberOfAnsweredQuestions);
     builder.append(", quizEnded=");
     builder.append(quizEnded);
     builder.append("]");
@@ -66,6 +78,8 @@ public class QuizStatus {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result =
+        prime * result + (int) (numberOfAnsweredQuestions ^ (numberOfAnsweredQuestions >>> 32));
     result = prime * result + (int) (numberOfAskedQuestions ^ (numberOfAskedQuestions >>> 32));
     result =
         prime * result + (int) (numberOfEligibleQuestions ^ (numberOfEligibleQuestions >>> 32));
@@ -86,6 +100,9 @@ public class QuizStatus {
       return false;
     }
     QuizStatus other = (QuizStatus) obj;
+    if (numberOfAnsweredQuestions != other.numberOfAnsweredQuestions) {
+      return false;
+    }
     if (numberOfAskedQuestions != other.numberOfAskedQuestions) {
       return false;
     }

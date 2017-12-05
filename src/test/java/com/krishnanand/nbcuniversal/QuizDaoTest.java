@@ -93,10 +93,11 @@ public class QuizDaoTest {
   }
   
   @Test
-  public void getCurrentQuizStatus() throws Exception {
+  public void testGetCurrentQuizStatus() throws Exception {
     QuizStatus actual = this.quizDao.getCurrentQuizStatus("ABCDE12345");
     QuizStatus expected = new QuizStatus();
     expected.setNumberOfAskedQuestions(2);
+    expected.setNumberOfAnsweredQuestions(1);
     expected.setNumberOfEligibleQuestions(3);
     expected.setQuizId("ABCDE12345");
     expected.setQuizEnded(false);
@@ -124,20 +125,14 @@ public class QuizDaoTest {
   
   @Test
   public void testUpdateScore_CorrectAnswer() throws Exception {
-    this.quizDao.initialiseScore("ABCDE12345");
-    Assert.assertEquals(
-        1,
-        (int) this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Score where quiz_id = ?",
-            new Object[] {"ABCDE12345"},
-            int.class));
     Solution expected = new Solution();
     expected.setQuizId("ABCDE12345");
     expected.setCorrectAnswer(true);
     expected.setPlayerAnswer(true);
-    this.quizDao.updateScore(expected);
+    Assert.assertEquals(1, this.quizDao.updateScore(expected));
     Score expectedScore = new Score();
     expectedScore.setCorrectAnswers(1);
-    expectedScore.setIncorrectAnswers(0);
+    expectedScore.setIncorrectAnswers(1); // Existing.
     expectedScore.setQuizId("ABCDE12345");
     Score actual = this.jdbcTemplate.query(
             "SELECT incorrect_answers, correct_answers FROM Score where quiz_id = ?",
@@ -161,12 +156,6 @@ public class QuizDaoTest {
   
   @Test
   public void testUpdateScore_IncorrectAnswer() throws Exception {
-    this.quizDao.initialiseScore("ABCDE12345");
-    Assert.assertEquals(
-        1,
-        (int) this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Score where quiz_id = ?",
-            new Object[] {"ABCDE12345"},
-            int.class));
     Solution expected = new Solution();
     expected.setQuizId("ABCDE12345");
     expected.setCorrectAnswer(true);
@@ -175,7 +164,7 @@ public class QuizDaoTest {
     this.quizDao.updateScore(expected);
     Score expectedScore = new Score();
     expectedScore.setCorrectAnswers(0);
-    expectedScore.setIncorrectAnswers(1);
+    expectedScore.setIncorrectAnswers(2);
     expectedScore.setQuizId("ABCDE12345");
     Score actual = this.jdbcTemplate.query(
             "SELECT incorrect_answers, correct_answers FROM Score where quiz_id = ?",
