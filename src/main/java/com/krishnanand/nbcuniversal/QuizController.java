@@ -45,7 +45,7 @@ public class QuizController {
   public ResponseEntity<QuizQuestion> questions(@PathVariable String quizId) {
     QuizQuestion question = this.quizService.fetchQuestion(quizId);
     if (question == null) {
-      return new ResponseEntity<QuizQuestion>(HttpStatus.TOO_MANY_REQUESTS);
+      return new ResponseEntity<QuizQuestion>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return new ResponseEntity<QuizQuestion>(question, HttpStatus.OK);
   }
@@ -55,8 +55,7 @@ public class QuizController {
       @RequestBody final Answer answer) {
     Solution solution = this.quizService.checkAnswer(quizId, answer);
     if (solution == null) {
-      // The question was not answered.
-      return new ResponseEntity<Solution>(HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<Solution>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return new ResponseEntity<>(solution, HttpStatus.OK);
   }

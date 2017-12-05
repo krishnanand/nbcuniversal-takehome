@@ -158,7 +158,8 @@ public class QuizDao implements IQuizDao {
   @Override
   public int updateScore(final Solution solution) {
     StringBuilder sb = new StringBuilder();
-    if (solution.isCorrectAnswer() == solution.isPlayerAnswer()) {
+    if (solution.getCorrectAnswer() != null &&
+        solution.getCorrectAnswer().equals(solution.getPlayerAnswer())) {
       sb.append("UPDATE Score SET correct_answers = correct_answers + 1 WHERE quiz_id = ?");
     } else {
       sb.append("UPDATE Score SET incorrect_answers = incorrect_answers + 1 WHERE quiz_id = ?");

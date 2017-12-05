@@ -20,9 +20,9 @@ public class Solution implements IError {
   
   private String question;
   
-  private boolean correctAnswer;
+  private Boolean correctAnswer;
   
-  private boolean playerAnswer;
+  private Boolean playerAnswer;
 
   public String getQuestion() {
     return question;
@@ -39,23 +39,28 @@ public class Solution implements IError {
   public void setQuizId(String quizId) {
     this.quizId = quizId;
   }
-
-  public boolean isCorrectAnswer() {
+  
+  public Boolean getCorrectAnswer() {
     return correctAnswer;
   }
 
-  public void setCorrectAnswer(boolean correctAnswer) {
+  public void setCorrectAnswer(Boolean correctAnswer) {
     this.correctAnswer = correctAnswer;
   }
 
-  public boolean isPlayerAnswer() {
+  public Boolean getPlayerAnswer() {
     return playerAnswer;
   }
 
-  public void setPlayerAnswer(boolean playerAnswer) {
+  public void setPlayerAnswer(Boolean playerAnswer) {
     this.playerAnswer = playerAnswer;
   }
-  
+
+  public void setErrors(List<Error> errors) {
+    this.errors = errors;
+  }
+
+
   @JsonInclude(Include.NON_EMPTY)
   private List<Error> errors;
 
@@ -95,9 +100,9 @@ public class Solution implements IError {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + (correctAnswer ? 1231 : 1237);
+    result = prime * result + ((correctAnswer == null) ? 0 : correctAnswer.hashCode());
     result = prime * result + ((errors == null) ? 0 : errors.hashCode());
-    result = prime * result + (playerAnswer ? 1231 : 1237);
+    result = prime * result + ((playerAnswer == null) ? 0 : playerAnswer.hashCode());
     result = prime * result + ((question == null) ? 0 : question.hashCode());
     result = prime * result + ((quizId == null) ? 0 : quizId.hashCode());
     return result;
@@ -115,7 +120,11 @@ public class Solution implements IError {
       return false;
     }
     Solution other = (Solution) obj;
-    if (correctAnswer != other.correctAnswer) {
+    if (correctAnswer == null) {
+      if (other.correctAnswer != null) {
+        return false;
+      }
+    } else if (!correctAnswer.equals(other.correctAnswer)) {
       return false;
     }
     if (errors == null) {
@@ -125,7 +134,11 @@ public class Solution implements IError {
     } else if (!errors.equals(other.errors)) {
       return false;
     }
-    if (playerAnswer != other.playerAnswer) {
+    if (playerAnswer == null) {
+      if (other.playerAnswer != null) {
+        return false;
+      }
+    } else if (!playerAnswer.equals(other.playerAnswer)) {
       return false;
     }
     if (question == null) {
