@@ -1,5 +1,10 @@
-# nbcuniversal-takehome
+# NBC Digital Take Home Assignment
 
+## Table of Contents
+
+- [API Endpoints](#api-endpoints)
+
+## API Endpoints ##
 Following are the list of endpoints supported the restful application
 
 ### POST /nbcuniversal/quiz ###
