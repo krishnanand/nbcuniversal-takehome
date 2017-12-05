@@ -2,14 +2,50 @@
 
 ## Table of Contents
 
+- [Introduction](#introduction)
+- [Deployment](#deployment)
 - [API Endpoints](#api-endpoints)
 
-## API Endpoints ##
+
+### Introduction ###
+
+This is a restful web application that enables a contestant to play a quiz. The project has a few requirements
+
+* Java 8
+* Apache Maven 3.x installed.
+
+To play the quiz, the user needs to register do the following
+
+1) This is done by making a HTTP POST request to the application to create a quiz game for the content.
+
+2) Make a GET request to fetch the quiz questions. Currently the system allows 3 questions per contestant.
+
+3) Make a POST request to answer the quiz question. The endpoint expects question ID and the answer in the request body. Please refer to API end points for more details.
+
+4) Make a GET request to determine one's score. 
+
+### Deployment ###
+
+There are two ways to deploy the web application.
+
+1) As this is a Maven project, it can be imported in an IDE such as Eclipse or IntelliJ as a Maven Project.
+
+* Create a Run configuration -> Java Application. Once done, select App as a main-class. 
+ The application will be deployed to an embedded TOMCAT container 
+
+* Build and compile the project from command line. Navigate to the project root using the command line, and execute the following command mvn spring-boot:run. You will need maven plugin for that.
+
+The RESTful services can be invoked after either steps is performed. 
+
+**IMPORTANT**: these two instructions are mutually exclusive.
+
+### API Endpoints ##
 Following are the list of endpoints supported the restful application
 
-### POST /nbcuniversal/quiz ###
+#### POST /nbcuniversal/quiz ####
 
-Creates a quiz game
+Creates a quiz game for the contestant.
+
 
 **Response**
 
@@ -35,7 +71,7 @@ The sample response is given below
 }
 ````
 
-### GET /nbcuniversal/quiz/{quizId}/questions ###
+#### GET /nbcuniversal/quiz/{quizId}/questions ####
 
 Generates unique questions for quiz id
 
@@ -101,7 +137,7 @@ The sample response is given below.
 }
 ````
 
-### POST /nbcuniversal/quiz/{quizId}/questions ###
+#### POST /nbcuniversal/quiz/{quizId}/questions ####
 
 Sends a response to a quiz question to the backend. The request body payload is defined below.
 
@@ -194,9 +230,9 @@ The sample response is given below
 }
 ````
 
-### GET /nbcuniversal/quiz/{quizId}/score ###
+#### GET /nbcuniversal/quiz/{quizId}/score ####
 
-This endpoint returns the score of the contestant at any given time. The response is defined as follows:
+This endpoint returns the score of the contestant for a quiz game. The response is defined as follows:
 
  Name | Type | Description |
 | :---         |     :---      | :--- |
