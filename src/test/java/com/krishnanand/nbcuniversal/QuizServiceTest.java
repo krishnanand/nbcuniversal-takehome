@@ -211,7 +211,7 @@ public class QuizServiceTest {
     Assert.assertEquals(actual.getNumberOfQuestions(), quizQuestions.size());
     // Now send an additional request.
     QuizQuestion questionWithErrors = this.quizService.fetchQuestion(actual.getQuizId());
-    Assert.assertEquals(0, (int) this.jdbcTemplate.query(
+    Assert.assertEquals(3, (int) this.jdbcTemplate.query(
         "SELECT number_of_questions FROM Quiz WHERE quiz_id = ?",
         new Object[] {actual.getQuizId()}, new ResultSetExtractor<Integer>() {
 
@@ -227,7 +227,8 @@ public class QuizServiceTest {
     List<IError.Error> actualErrors = questionWithErrors.getErrors();
     List<IError.Error> expectedErrors = new ArrayList<>();
     expectedErrors.add(
-        new IError.Error(429, "The quiz " + actual.getQuizId() + "is no longer active."));
+        new IError.Error(
+            429, "There are no questions to be asked for quiz id " + actual.getQuizId()));
     Assert.assertEquals(expectedErrors, actualErrors);
   }
   

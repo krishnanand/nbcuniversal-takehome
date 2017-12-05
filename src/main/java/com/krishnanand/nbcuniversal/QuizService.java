@@ -43,6 +43,11 @@ public class QuizService implements IQuizService {
       qq.addError(404, "No quiz was found for quiz id " + quizId);
       return  qq;
     }
+    if (current.getNumberOfAskedQuestions() == current.getNumberOfEligibleQuestions()) {
+      QuizQuestion qq = new QuizQuestion();
+      qq.addError(429, "There are no questions to be asked for quiz id " + quizId);
+      return qq;
+    }
     if (current.isQuizEnded()) {
       this.quizDao.markQuizAsCompleted(quizId);
       QuizQuestion qq = new QuizQuestion();
@@ -53,7 +58,7 @@ public class QuizService implements IQuizService {
     QuizQuestion question = this.questionsDao.fetchUniqueQuizQuestion(quizId);
     if (question == null) {
       question = new QuizQuestion();
-      question.addError(404, "No unique questions were found for quiz Id " + quizId);
+      question.addError(400, "No unique questions were found for quiz Id " + quizId);
       return question;
     }
     this.questionsDao.updateQuizStatus(quizId);
