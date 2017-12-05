@@ -35,7 +35,7 @@ A successful response will include
 ● Response body properties
 
 | Name | Type | Description|
-| :---         |     :---:      |          ---: |
+| :---         |     :---:      |          :---: |
 | questionId  | integer   | Question Id associated with the question  |
 | question   | string    | Question to be answered as a part of the quiz    |
 
@@ -74,7 +74,7 @@ In this case, 404 error is returned. The sample response
 The error response is defined below
 
 | Name | Type | Description|
-| :---         |     :---:      |          ---: |
+| :---         |     :---:      |          |---: |
 | errors  | array   | array of errors |
 | code   | integer    | Http Status code representing the error message |
 | message | string | user friendly error message|
