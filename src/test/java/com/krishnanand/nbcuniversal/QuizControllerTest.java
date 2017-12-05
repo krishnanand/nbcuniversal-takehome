@@ -143,4 +143,12 @@ public class QuizControllerTest {
     Assert.assertEquals(expected, actual);
   }
   
+  @Test
+  public void testGetScore_Invalid() throws Exception {
+    Score actual = this.quizController.getScore("nothing");
+    Score expected = new Score();
+    expected.addError(400, "No quiz was found for quiz id nothing");
+    Assert.assertEquals(expected, actual);
+  }
+  
 }

@@ -197,7 +197,7 @@ public class QuizServiceTest {
     List<IError.Error> actualErrors = actual.getErrors();
     List<IError.Error> expectedErrors = new ArrayList<>();
     expectedErrors.add(
-        new IError.Error(429, "No quiz was found for quiz id missing"));
+        new IError.Error(400, "No quiz was found for quiz id missing"));
     Assert.assertEquals(expectedErrors, actualErrors);
   }
   

@@ -59,6 +59,14 @@ public class Score implements IError {
     this.errors = errors;
   }
 
+  public Integer getScore() {
+    return score;
+  }
+
+  public void setScore(Integer score) {
+    this.score = score;
+  }
+
   @Override
   public List<Error> getErrors() {
     return this.errors;
