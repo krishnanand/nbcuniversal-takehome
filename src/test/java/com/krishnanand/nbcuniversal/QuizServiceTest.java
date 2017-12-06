@@ -228,7 +228,7 @@ public class QuizServiceTest {
     List<IError.Error> expectedErrors = new ArrayList<>();
     expectedErrors.add(
         new IError.Error(
-            429, "There are no questions to be asked for quiz id " + actual.getQuizId()));
+            429, "There are no more questions to be asked for quiz id " + actual.getQuizId()));
     Assert.assertEquals(expectedErrors, actualErrors);
   }
   

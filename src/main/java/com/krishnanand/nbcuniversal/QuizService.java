@@ -52,7 +52,7 @@ public class QuizService implements IQuizService {
     }
     if (current.getNumberOfAskedQuestions() == current.getNumberOfEligibleQuestions()) {
       QuizQuestion qq = new QuizQuestion();
-      qq.addError(429, "There are no questions to be asked for quiz id " + quizId);
+      qq.addError(429, "There are no more questions to be asked for quiz id " + quizId);
       return qq;
     }
     //
