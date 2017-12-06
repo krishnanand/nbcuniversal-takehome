@@ -175,7 +175,9 @@ public class QuizDao implements IQuizDao {
     });
   }
 
-
+  /**
+   * Returns the current score for quiz id.
+   */
   @Override
   public Score getCurrentScore(String quizId) {
     Score score = this.jdbcTemplate.query(
