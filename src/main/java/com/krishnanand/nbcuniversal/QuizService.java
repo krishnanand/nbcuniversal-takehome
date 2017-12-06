@@ -96,6 +96,11 @@ public class QuizService implements IQuizService {
       error.addError(400, "No quiz was found for quiz id " + quizId);
       return error;
     }
+    if (quizStatus.isQuizEnded()) {
+      Solution error = new Solution();
+      error.addError(400, "The quiz " + quizId + "is no longer active.");
+      return error;
+    }
     if (!this.questionsDao.isQuestionAsked(quizId, answer.getQuestionId())) {
       Solution error = new Solution();
       error.addError(400, "No such question was asked.");

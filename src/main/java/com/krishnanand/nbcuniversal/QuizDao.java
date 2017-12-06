@@ -125,7 +125,9 @@ public class QuizDao implements IQuizDao {
           qs.setNumberOfAnsweredQuestions(
               rs.getInt("correct_answers") + rs.getInt("incorrect_answers"));
           qs.setQuizId(rs.getString("quiz_id"));
-          qs.setQuizEnded(qs.getNumberOfAnsweredQuestions() == qs.getNumberOfEligibleQuestions());
+          qs.setQuizEnded(
+              qs.getNumberOfAnsweredQuestions() == qs.getNumberOfEligibleQuestions() ||
+              qs.getNumberOfEligibleQuestions() == 0);
           return qs;
         }
         return null;

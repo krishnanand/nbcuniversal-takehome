@@ -316,7 +316,7 @@ public class QuizServiceTest {
   
   // Checks if the quiz is marked as having ended.
   @Test
-  public void testEndQuiz() throws Exception {
+  public void testEndQuiz_AfteFetch() throws Exception {
     InitRegistration registration = this.quizService.generateQuizId("test");
     for (int i = 0; i < registration.getNumberOfQuestions(); i++) {
       QuizQuestion qq = this.quizService.fetchQuestion(registration.getQuizId());
@@ -328,6 +328,28 @@ public class QuizServiceTest {
     QuizQuestion qq = this.quizService.fetchQuestion(registration.getQuizId());
     Assert.assertEquals(1, qq.getErrors().size());
     IError.Error error = qq.getErrors().get(0);
+    Assert.assertEquals(
+        new IError.Error(400, "The quiz " + registration.getQuizId() + "is no longer active."),
+        error);
+    
+  }
+  
+  @Test
+  public void testEndQuiz_AfteAnswering() throws Exception {
+    InitRegistration registration = this.quizService.generateQuizId("test");
+    for (int i = 0; i < registration.getNumberOfQuestions(); i++) {
+      QuizQuestion qq = this.quizService.fetchQuestion(registration.getQuizId());
+      Answer answer = new Answer();
+      answer.setQuestionId(qq.getQuestionId());
+      answer.setResponse(false);
+      this.quizService.checkAnswer(registration.getQuizId(), answer);
+    }
+    Answer last = new  Answer();
+    last.setQuestionId(5);
+    last.setResponse(false);
+    Solution sol = this.quizService.checkAnswer(registration.getQuizId(), last);
+    Assert.assertEquals(1, sol.getErrors().size());
+    IError.Error error = sol.getErrors().get(0);
     Assert.assertEquals(
         new IError.Error(400, "The quiz " + registration.getQuizId() + "is no longer active."),
         error);
