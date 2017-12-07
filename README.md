@@ -1,4 +1,4 @@
-# NBC Digital Take Home Assignment
+# NBC Digital Take Home Assignment [![Build Status](https://travis-ci.org/krishnanand/nbcuniversal-takehome.svg?branch=master)](https://travis-ci.org/krishnanand/nbcuniversal-takehome)
 
 ## Table of Contents
 
