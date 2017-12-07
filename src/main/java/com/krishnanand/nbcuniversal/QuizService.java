@@ -84,8 +84,11 @@ public class QuizService implements IQuizService {
    * <p>The implementation checks if the question has already been answered previously.
    * If not, the implementation checks the contestant's answer, and updates the score.
    * In addition the implementation updates the score after every answer.
+   *
+   * <p>If the quiz has ended, or if the quiz game has not been created for our
+   * system, then the error message is returned
    * 
-   * @param answer answer object
+   * @param answer answer representing the user response
    */
   @Override
   @Transactional
@@ -119,7 +122,7 @@ public class QuizService implements IQuizService {
 
 
   /**
-   * Returns the score.
+   * Returns the score if it exists, and an error response otherwise.
    */
   @Override
   @Transactional
